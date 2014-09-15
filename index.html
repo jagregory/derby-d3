@@ -5,14 +5,19 @@
 
 path {
   fill: none;
-  stroke: #000;
+  stroke: rgba(0,0,0,.1);
   stroke-width: 3px;
 }
 
 circle {
   fill: steelblue;
-  stroke: #fff;
+  stroke: #ccc;
   stroke-width: 3px;
+}
+
+circle.team-b {
+  fill: maroon;
+  stroke: #ccc;
 }
 
 .trackOutside {
@@ -43,29 +48,130 @@ function firstOfEach(arr) {
   })
 }
 
-var player1 = {
+var teamAJammer = {
+  team: 'a',
   moves: [{
-    duration: 1,
-    points: [
-      [680, 100],
-      [680, 300],
-    ]
-  }, {
     duration: 5,
     points: [
-      [680, 300],
-      [180, 300]
-    ]
-  }, {
-    duration: 2,
-    points: [
+      [600, 115],
+      [180, 100],
       [180, 300],
-      [180, 100]
     ]
   }]
 };
 
-var players = [player1]
+var teamABlocker1 = {
+  team: 'a',
+  moves: [{
+    duration: 5,
+    points: [
+      [400, 120],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamABlocker2 = {
+  team: 'a',
+  moves: [{
+    duration: 5,
+    points: [
+      [400, 80],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamABlocker3 = {
+  team: 'a',
+  moves: [{
+    duration: 5,
+    points: [
+      [350, 120],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamABlocker4 = {
+  team: 'a',
+  moves: [{
+    duration: 5,
+    points: [
+      [350, 80],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamBJammer = {
+  team: 'b',
+  moves: [{
+    duration: 5,
+    points: [
+      [600, 85],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamBBlocker1 = {
+  team: 'b',
+  moves: [{
+    duration: 5,
+    points: [
+      [450, 120],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamBBlocker2 = {
+  team: 'b',
+  moves: [{
+    duration: 5,
+    points: [
+      [450, 80],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamBBlocker3 = {
+  team: 'b',
+  moves: [{
+    duration: 5,
+    points: [
+      [500, 120],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var teamBBlocker4 = {
+  team: 'b',
+  moves: [{
+    duration: 5,
+    points: [
+      [500, 80],
+      [180, 100],
+      [180, 300],
+    ]
+  }]
+};
+
+var players = [
+  teamAJammer, teamABlocker1, teamABlocker2, teamABlocker3, teamABlocker4,
+  teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBBlocker4,
+]
 
 var svg = d3.select("body").append("svg")
     .attr("width", 960)
@@ -94,18 +200,19 @@ var animateFunctions = players.map(function(player) {
         return line(d.points)
       });
 
-  var points = svg.selectAll(".point")
-    .data(flatten(player.moves.map(function(a) { return a.points })))
-    .enter()
-      .append("circle")
-      .attr("r", 4)
-      .attr("transform", function (d) {
-        return "translate(" + d + ")";
-      });
+  // var points = svg.selectAll(".point")
+  //   .data(flatten(player.moves.map(function(a) { return a.points })))
+  //   .enter()
+  //     .append("circle")
+  //     .attr("r", 2)
+  //     .attr("transform", function (d) {
+  //       return "translate(" + d + ")";
+  //     });
 
   var circle = svg.append('circle')
-      .attr("r", 13)
-      .attr("transform", "translate(" + player.moves[0].points[0] + ")");
+    .attr('class', 'team-' + player.team)
+    .attr("r", 12)
+    .attr("transform", "translate(" + player.moves[0].points[0] + ")");
 
   var activeSegment = 0
   var trans = function() {
