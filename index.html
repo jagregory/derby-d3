@@ -5,7 +5,7 @@
 
 path {
   fill: none;
-  stroke: rgba(0,0,0,.1);
+  stroke: rgba(0,0,0,.05);
   stroke-width: 3px;
 }
 
@@ -51,11 +51,17 @@ function firstOfEach(arr) {
 var teamAJammer = {
   team: 'a',
   moves: [{
-    duration: 5,
+    duration: 1,
     points: [
       [600, 115],
-      [180, 100],
-      [180, 300],
+      [480, 115],
+    ]
+  }, {
+    duration: 1,
+    points: [
+      [480, 115],
+      [450, 125],
+      [300, 100],
     ]
   }]
 };
@@ -63,11 +69,11 @@ var teamAJammer = {
 var teamABlocker1 = {
   team: 'a',
   moves: [{
-    duration: 5,
+    duration: .5,
     points: [
       [400, 120],
-      [180, 100],
-      [180, 300],
+      [420, 120],
+      [420, 110],
     ]
   }]
 };
@@ -75,11 +81,11 @@ var teamABlocker1 = {
 var teamABlocker2 = {
   team: 'a',
   moves: [{
-    duration: 5,
+    duration: .5,
     points: [
       [400, 80],
-      [180, 100],
-      [180, 300],
+      [420, 80],
+      [420, 90],
     ]
   }]
 };
@@ -87,11 +93,16 @@ var teamABlocker2 = {
 var teamABlocker3 = {
   team: 'a',
   moves: [{
-    duration: 5,
+    duration: .75,
     points: [
       [350, 120],
-      [180, 100],
-      [180, 300],
+      [420, 130],
+    ]
+  }, {
+    duration: .75,
+    points: [
+      [420, 130],
+      [450, 140],
     ]
   }]
 };
@@ -99,11 +110,10 @@ var teamABlocker3 = {
 var teamABlocker4 = {
   team: 'a',
   moves: [{
-    duration: 5,
+    duration: .75,
     points: [
       [350, 80],
-      [180, 100],
-      [180, 300],
+      [420, 70],
     ]
   }]
 };
@@ -111,11 +121,10 @@ var teamABlocker4 = {
 var teamBJammer = {
   team: 'b',
   moves: [{
-    duration: 5,
+    duration: 1,
     points: [
       [600, 85],
-      [180, 100],
-      [180, 300],
+      [480, 85],
     ]
   }]
 };
@@ -123,11 +132,10 @@ var teamBJammer = {
 var teamBBlocker1 = {
   team: 'b',
   moves: [{
-    duration: 5,
+    duration: .5,
     points: [
       [450, 120],
-      [180, 100],
-      [180, 300],
+      [450, 110],
     ]
   }]
 };
@@ -135,11 +143,10 @@ var teamBBlocker1 = {
 var teamBBlocker2 = {
   team: 'b',
   moves: [{
-    duration: 5,
+    duration: .5,
     points: [
       [450, 80],
-      [180, 100],
-      [180, 300],
+      [450, 90],
     ]
   }]
 };
@@ -147,11 +154,16 @@ var teamBBlocker2 = {
 var teamBBlocker3 = {
   team: 'b',
   moves: [{
-    duration: 5,
+    duration: .75,
     points: [
       [500, 120],
-      [180, 100],
-      [180, 300],
+      [450, 130],
+    ]
+  }, {
+    duration: .75,
+    points: [
+      [450, 130],
+      [450, 160],
     ]
   }]
 };
@@ -159,11 +171,10 @@ var teamBBlocker3 = {
 var teamBBlocker4 = {
   team: 'b',
   moves: [{
-    duration: 5,
+    duration: .75,
     points: [
       [500, 80],
-      [180, 100],
-      [180, 300],
+      [450, 70],
     ]
   }]
 };
@@ -217,7 +228,7 @@ var animateFunctions = players.map(function(player) {
   var activeSegment = 0
   var trans = function() {
     if (activeSegment >= paths[0].length) {
-      activeSegment = 0
+      return
     }
 
     var path = paths[0][activeSegment]
@@ -249,3 +260,4 @@ function step() {
 // step()
 
 </script>
+<button onclick="step()">Step</button>
