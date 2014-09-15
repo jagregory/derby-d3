@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+<style>
+
+path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 3px;
+}
+
+circle {
+  fill: steelblue;
+  stroke: #fff;
+  stroke-width: 3px;
+}
+
+</style>
+<script src="d3.v3.min.js"></script>
+<script>
+
+function flatten(arr) {
+  return arr.reduce(function(a, b) {
+    return a.concat(b)
+  })
+}
+
+function firstOfEach(arr) {
+  return arr.map(function(a) {
+    return a[0]
+  })
+}
+
+var points = [
+    [680, 100],
+    [680, 300],
+    [180, 300],
+    [180, 100]
+];
+
+var points2 = [
+    [690, 120],
+    [690, 290],
+    [190, 290],
+    [190, 120]
+];
+
+var all = [points, points2]
+
+var svg = d3.select("body").append("svg")
+    .attr("width", 960)
+    .attr("height", 500);
+
+//var path = svg.append("path")
+//    .data([points, points2])
+//    .attr("d", d3.svg.line()
+//    .tension(0.75) // Catmull–Rom
+//.interpolate("cardinal-closed"));
+
+var paths = svg.selectAll('.path')
+  .data(all)
+  .enter()
+    .append('path')
+    .attr('d', d3.svg.line().tension(0.75).interpolate('cardinal-closed'));
+
+svg.selectAll(".point")
+  .data(flatten(all))
+  .enter()
+    .append("circle")
+    .attr("r", 4)
+    .attr("transform", function (d) {
+      return "translate(" + d + ")";
+    });
+
+var circle = svg.selectAll('.player')
+  .data(firstOfEach(all))
+  .enter()
+    .append("circle")
+    .attr("r", 13)
+    .attr("transform", function (d) {
+      return "translate(" + d + ")";
+    });
+
+transition(0);
+
+function transition(start) {
+    circle.transition()
+        .duration(10000)
+        .attrTween("transform", function(d, idx) {
+          var path = paths[0][idx]
+          var l = path.getTotalLength();
+          return function (t) {
+              var p = path.getPointAtLength(t * l);
+              return "translate(" + p.x + "," + p.y + ")";
+          };
+        })
+        .each("end", transition);
+}
+
+// Returns an attrTween for translating along the specified path element.
+// function translateAlong(path) {
+//     var l = path.getTotalLength();
+//     return function (d, i, a) {
+//         return function (t) {
+//             var p = path.getPointAtLength(t * l);
+//             return "translate(" + p.x + "," + p.y + ")";
+//         };
+//     };
+// }
+
+</script>
