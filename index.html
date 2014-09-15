@@ -32,18 +32,25 @@ function firstOfEach(arr) {
 }
 
 var player1 = {
-  moves: [
-    [
+  moves: [{
+    duration: 1,
+    points: [
       [680, 100],
-      [680, 300]
-    ], [
+      [680, 300],
+    ]
+  }, {
+    duration: 5,
+    points: [
       [680, 300],
       [180, 300]
-    ], [
+    ]
+  }, {
+    duration: 2,
+    points: [
       [180, 300],
       [180, 100]
     ]
-  ]
+  }]
 };
 
 var players = [player1]
@@ -52,15 +59,21 @@ var svg = d3.select("body").append("svg")
     .attr("width", 960)
     .attr("height", 500);
 
+var line = d3.svg.line()
+  .tension(0.75)
+  .interpolate('cardinal')
+
 var animateFunctions = players.map(function(player) {
   var paths = svg.selectAll('.path')
     .data(player.moves)
     .enter()
       .append('path')
-      .attr('d', d3.svg.line().tension(0.75).interpolate('cardinal'));
+      .attr('d', function(d) {
+        return line(d.points)
+      });
 
   var points = svg.selectAll(".point")
-    .data(flatten(player.moves))
+    .data(flatten(player.moves.map(function(a) { return a.points })))
     .enter()
       .append("circle")
       .attr("r", 4)
@@ -70,7 +83,7 @@ var animateFunctions = players.map(function(player) {
 
   var circle = svg.append('circle')
       .attr("r", 13)
-      .attr("transform", "translate(" + player.moves[0][0] + ")");
+      .attr("transform", "translate(" + player.moves[0].points[0] + ")");
 
   var activeSegment = 0
   var trans = function() {
@@ -78,10 +91,12 @@ var animateFunctions = players.map(function(player) {
       activeSegment = 0
     }
 
+    var path = paths[0][activeSegment]
+    var move = player.moves[activeSegment]
+
     circle.transition()
-      .duration(5000)
+      .duration(move.duration * 1000)
       .attrTween('transform', function(d, idx) {
-        var path = paths[0][activeSegment]
         var l = path.getTotalLength();
         return function (t) {
           var p = path.getPointAtLength(t * l);
@@ -102,6 +117,6 @@ function step() {
   })
 }
 
-step()
+// step()
 
 </script>
