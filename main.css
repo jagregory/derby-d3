@@ -1,0 +1,20 @@
+path {
+  fill: none;
+  stroke: rgba(0,0,0,.05);
+  stroke-width: 3px;
+}
+
+.player {
+  fill: #005FA5;
+  stroke: #ccc;
+}
+
+.player.team-b {
+  fill: #F00097;
+  stroke: #ccc;
+}
+
+.track {
+  stroke: #555;
+  stroke-width: 2;
+}

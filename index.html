@@ -1,32 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link rel="stylesheet" href="main.css" />
 <body>
-<style>
-
-path {
-  fill: none;
-  stroke: rgba(0,0,0,.05);
-  stroke-width: 3px;
-}
-
-.player {
-  fill: steelblue;
-  stroke: #ccc;
-  stroke-width: 3px;
-}
-
-.player.team-b {
-  fill: maroon;
-  stroke: #ccc;
-}
-
-.track {
-  stroke: orange;
-  stroke-width: 2;
-  stroke-dasharray: 5,2;
-}
-
-</style>
 <script src="d3.v3.min.js"></script>
 <script>
 
@@ -236,12 +211,12 @@ var animateFunctions = players.map(function(player) {
   if (player.position == 'jammer') {
     circle = svg.append('polygon')
       .attr('class', 'player team-' + player.team)
-      .attr("points", CalculateStarPoints(0, 0, 5, 15, 10))
+      .attr("points", CalculateStarPoints(0, 0, 5, 12, 7))
       .attr("transform", "translate(" + point + ")");
   } else {
     circle = svg.append('circle')
       .attr('class', 'player team-' + player.team)
-      .attr("r", 12)
+      .attr("r", 10)
       .attr("transform", "translate(" + point + ")");
   }
 
