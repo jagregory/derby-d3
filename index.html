@@ -45,6 +45,30 @@ function firstOfEach(arr) {
   })
 }
 
+function createPlayerGraphic(p) {
+  var point = p.moves[0].points[0]
+  var player = svg.append('g')
+    .attr('class', 'player team-' + p.team)
+    .attr("transform", "translate(" + point + ")");
+
+  player.append('circle')
+    .attr("r", 10)
+
+  if (p.position == 'jammer') {
+    player.append('polygon')
+      .attr("points", CalculateStarPoints(0, 0, 5, 8.5, 4.5))
+  } else if (p.position == 'pivot') {
+    player.append('rect')
+      .attr('width', 18)
+      .attr('height', 5)
+      .attr('x', -9)
+      .attr('y', -2.5)
+      .attr('rx', 2)
+  }
+
+  return player
+}
+
 var teamAJammer = {
   team: 'a',
   position: 'jammer',
@@ -199,27 +223,7 @@ var animateFunctions = players.map(function(player) {
         return line(d.points)
       });
 
-  var point = player.moves[0].points[0]
-  var circle = svg.append('g')
-      .attr('class', 'player team-' + player.team)
-      .attr("transform", "translate(" + point + ")");
-
-    circle.append('circle')
-      .attr("r", 10)
-
-  if (player.position == 'jammer') {
-    circle.append('polygon')
-      .attr("points", CalculateStarPoints(0, 0, 5, 8.5, 4.5))
-  } else {
-    if (player.position == 'pivot') {
-      circle.append('rect')
-        .attr('width', 18)
-        .attr('height', 5)
-        .attr('x', -9)
-        .attr('y', -2.5)
-        .attr('rx', 2)
-    }
-  }
+  var circle = createPlayerGraphic(player)
 
   var activeSegment = 0
   var trans = function() {
