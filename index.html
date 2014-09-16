@@ -51,15 +51,28 @@ var teamAJammer = {
   moves: [{
     duration: 1,
     points: [
-      [600, 115],
-      [480, 115],
+      [500, 85],
+      [420, 85],
     ]
   }, {
     duration: 1,
     points: [
-      [480, 115],
-      [450, 125],
-      [300, 100],
+      [420, 85],
+      [430, 75],
+      [400, 60],
+      [300, 90],
+    ]
+  }]
+};
+
+var teamAPivot = {
+  team: 'a',
+  position: 'pivot',
+  moves: [{
+    duration: .5,
+    points: [
+      [350, 87.5],
+      [350, 100],
     ]
   }]
 };
@@ -69,9 +82,8 @@ var teamABlocker1 = {
   moves: [{
     duration: .5,
     points: [
-      [400, 120],
-      [420, 120],
-      [420, 110],
+      [380, 65],
+      [405, 80],
     ]
   }]
 };
@@ -79,11 +91,10 @@ var teamABlocker1 = {
 var teamABlocker2 = {
   team: 'a',
   moves: [{
-    duration: .5,
+    duration: .25,
     points: [
-      [400, 80],
-      [420, 80],
-      [420, 90],
+      [410, 87.5],
+      [380, 87.5],
     ]
   }]
 };
@@ -91,28 +102,9 @@ var teamABlocker2 = {
 var teamABlocker3 = {
   team: 'a',
   moves: [{
-    duration: .75,
+    duration: .5,
     points: [
-      [350, 120],
-      [420, 130],
-    ]
-  }, {
-    duration: .75,
-    points: [
-      [420, 130],
-      [450, 140],
-    ]
-  }]
-};
-
-var teamAPivot = {
-  team: 'a',
-  position: 'pivot',
-  moves: [{
-    duration: .75,
-    points: [
-      [350, 80],
-      [420, 70],
+      [380, 110],
     ]
   }]
 };
@@ -123,47 +115,8 @@ var teamBJammer = {
   moves: [{
     duration: 1,
     points: [
-      [600, 85],
-      [480, 85],
-    ]
-  }]
-};
-
-var teamBBlocker1 = {
-  team: 'b',
-  moves: [{
-    duration: .5,
-    points: [
-      [450, 120],
-      [450, 110],
-    ]
-  }]
-};
-
-var teamBBlocker2 = {
-  team: 'b',
-  moves: [{
-    duration: .5,
-    points: [
-      [450, 80],
-      [450, 90],
-    ]
-  }]
-};
-
-var teamBBlocker3 = {
-  team: 'b',
-  moves: [{
-    duration: .75,
-    points: [
-      [500, 120],
-      [450, 130],
-    ]
-  }, {
-    duration: .75,
-    points: [
-      [450, 130],
-      [450, 160],
+      [500, 115],
+      [400, 100],
     ]
   }]
 };
@@ -174,8 +127,47 @@ var teamBPivot = {
   moves: [{
     duration: .75,
     points: [
-      [500, 80],
-      [450, 70],
+      [350, 120],
+    ]
+  }]
+};
+
+var teamBBlocker1 = {
+  team: 'b',
+  moves: [{
+    duration: .5,
+    points: [
+      [380, 87.5],
+      [350, 40],
+    ]
+  }, {
+    duration: 1,
+    points: [
+      [350, 40],
+      [410, 40],
+      [400, 60],
+    ]
+  }]
+};
+
+var teamBBlocker2 = {
+  team: 'b',
+  moves: [{
+    duration: .5,
+    points: [
+      [410, 120],
+      [400, 120],
+    ]
+  }]
+};
+
+var teamBBlocker3 = {
+  team: 'b',
+  moves: [{
+    duration: .75,
+    points: [
+      [380, 135],
+      [380, 130],
     ]
   }]
 };
