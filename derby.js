@@ -1,3 +1,6 @@
+var width = 960
+var height = 500
+
 function CalculateStarPoints(centerX, centerY, arms, outerRadius, innerRadius) {
    var results = "";
  
@@ -61,6 +64,54 @@ function createPlayerGraphic(p) {
 
   return player
 }
+
+function scaleX(x) {
+  return (x * (width / 26)) + 140
+}
+
+function scaleY(y) {
+  return (y * height / 17) + 50
+}
+
+function scale(xy) {
+  return [scaleX(xy[0]), scaleY(xy[1])]
+}
+
+function playerFromRelative(relative) {
+  var moves = relative.moves.map(function(move) {
+    return {
+      duration: move.duration,
+      points: move.points.map(scale),
+    }
+  })
+
+  moves.splice(0, 0, {
+    duration: .5,
+    points: [
+      scale([relative.x, relative.y]),
+    ]
+  })
+
+  return {
+    team: relative.team,
+    position: relative.position,
+    moves: moves,
+  }
+}
+
+var p = playerFromRelative({
+  team: 'a',
+  position: 'jammer',
+  x: 12,
+  y: 1,
+  moves: [{
+    duration: .5,
+    points: [
+      [12, 1],
+      [5, 1]
+    ]
+  }]
+})
 
 var teamAJammer = {
   team: 'a',
@@ -195,8 +246,8 @@ var players = [
 ]
 
 var svg = d3.select("body").append("svg")
-    .attr("width", 960)
-    .attr("height", 500);
+    .attr("width", width)
+    .attr("height", height);
 
 var trackOutside = svg.append('path')
   .attr('class', 'track')
