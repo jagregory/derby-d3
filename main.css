@@ -6,12 +6,10 @@ path {
 
 .player {
   fill: #005FA5;
-  stroke: #ccc;
 }
 
 .player.team-b {
   fill: #F00097;
-  stroke: #ccc;
 }
 
 .track {

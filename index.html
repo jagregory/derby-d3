@@ -105,8 +105,9 @@ var teamABlocker3 = {
   }]
 };
 
-var teamABlocker4 = {
+var teamAPivot = {
   team: 'a',
+  position: 'pivot',
   moves: [{
     duration: .75,
     points: [
@@ -167,8 +168,9 @@ var teamBBlocker3 = {
   }]
 };
 
-var teamBBlocker4 = {
+var teamBPivot = {
   team: 'b',
+  position: 'pivot',
   moves: [{
     duration: .75,
     points: [
@@ -179,8 +181,8 @@ var teamBBlocker4 = {
 };
 
 var players = [
-  teamAJammer, teamABlocker1, teamABlocker2, teamABlocker3, teamABlocker4,
-  teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBBlocker4,
+  teamAJammer, teamABlocker1, teamABlocker2, teamABlocker3, teamAPivot,
+  teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBPivot,
 ]
 
 var svg = d3.select("body").append("svg")
@@ -205,19 +207,27 @@ var animateFunctions = players.map(function(player) {
         return line(d.points)
       });
 
-  var circle = null
   var point = player.moves[0].points[0]
+  var circle = svg.append('g')
+      .attr('class', 'player team-' + player.team)
+      .attr("transform", "translate(" + point + ")");
 
   if (player.position == 'jammer') {
-    circle = svg.append('polygon')
-      .attr('class', 'player team-' + player.team)
+    circle.append('polygon')
       .attr("points", CalculateStarPoints(0, 0, 5, 12, 7))
-      .attr("transform", "translate(" + point + ")");
   } else {
-    circle = svg.append('circle')
-      .attr('class', 'player team-' + player.team)
+    circle.append('circle')
       .attr("r", 10)
-      .attr("transform", "translate(" + point + ")");
+    
+    if (player.position == 'pivot') {
+      circle.append('rect')
+        .attr('width', 18)
+        .attr('height', 5)
+        .attr('x', -9)
+        .attr('y', -2.5)
+        .attr('rx', 2)
+        .attr('fill', 'white')
+    }
   }
 
   var activeSegment = 0
