@@ -12,6 +12,10 @@ path {
   fill: #F00097;
 }
 
+.player polygon, .player rect {
+  fill: white;
+}
+
 .track {
   stroke: #555;
   stroke-width: 2;

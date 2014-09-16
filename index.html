@@ -204,13 +204,13 @@ var animateFunctions = players.map(function(player) {
       .attr('class', 'player team-' + player.team)
       .attr("transform", "translate(" + point + ")");
 
-  if (player.position == 'jammer') {
-    circle.append('polygon')
-      .attr("points", CalculateStarPoints(0, 0, 5, 12, 7))
-  } else {
     circle.append('circle')
       .attr("r", 10)
-    
+
+  if (player.position == 'jammer') {
+    circle.append('polygon')
+      .attr("points", CalculateStarPoints(0, 0, 5, 8.5, 4.5))
+  } else {
     if (player.position == 'pivot') {
       circle.append('rect')
         .attr('width', 18)
@@ -218,7 +218,6 @@ var animateFunctions = players.map(function(player) {
         .attr('x', -9)
         .attr('y', -2.5)
         .attr('rx', 2)
-        .attr('fill', 'white')
     }
   }
 
