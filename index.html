@@ -20,16 +20,10 @@ path {
   stroke: #ccc;
 }
 
-.trackOutside {
-  stroke: red;
+.track {
+  stroke: orange;
   stroke-width: 2;
-  stroke-dasharray: 5,5;
-}
-
-.trackInside {
-  stroke: red;
-  stroke-width: 4;
-  stroke-dasharray: 5,5;
+  stroke-dasharray: 5,2;
 }
 
 </style>
@@ -219,14 +213,9 @@ var svg = d3.select("body").append("svg")
     .attr("height", 500);
 
 var trackOutside = svg.append('path')
-  .attr('class', 'trackOutside')
-  .attr('d', 'm469.918549,238.749939l0,0m0,-237.999939l0,0c51.819244,0 93.831512,53.279083 93.831512,119c0,65.720764 -42.012268,118.999939 -93.831512,118.999939l-375.332916,0c-51.819275,0 -93.835632,-53.279175 -93.835632,-118.999939c0,-65.720917 42.016357,-119 93.835632,-119l375.332916,0z')
-  .attr('transform', 'translate(50, 50), scale(1.5)')
-
-var trackInside = svg.append('path')
-  .attr('class', 'trackInside')
-  .attr('d', 'm469.918549,238.749939l0,0m0,-237.999939l0,0c51.819244,0 93.831512,53.279083 93.831512,119c0,65.720764 -42.012268,118.999939 -93.831512,118.999939l-375.332916,0c-51.819275,0 -93.835632,-53.279175 -93.835632,-118.999939c0,-65.720917 42.016357,-119 93.835632,-119l375.332916,0z')
-  .attr('transform', 'translate(190, 150), scale(1, .65)')
+  .attr('class', 'track')
+  .attr('d', 'M80.8,6.1 l106.7,-6.1 a8.08,8.08 0 0,1 0,161.5 l-106.7,6.1 a8.08,8.08 0 0,1 0,-161.5z m0,39.6 a8.08,8.08 0 0,0 0,76.2 l106.7,0 a8.08,8.08 0 0,0 0,-76.2z')
+  .attr('transform', 'translate(120, 40), scale(2.5)')
 
 var line = d3.svg.line()
   .tension(0.75)
