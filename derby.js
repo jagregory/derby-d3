@@ -281,8 +281,10 @@ function zoomToRect(rect) {
   zoomTo([-rect.x * scale, -rect.y * scale], scale)
 }
 
+var shouldFocus = true
 function zoom() {
   zoomTo(d3.event.translate, d3.event.scale)
+  shouldFocus = false
 }
 
 var trackOutside = svg.append('path')
@@ -359,7 +361,6 @@ function scaleRect(rect, scaleX, scaleY) {
 function focusOnActivity() {
   var rect = minimalBoundingRect('.player')
   zoomToRect(scaleRect(rect, 2))
-  // zoomToRect(rect)
 }
 
 var animateFunctions = players.map(function(player) {
@@ -387,7 +388,9 @@ var animateFunctions = players.map(function(player) {
       .attrTween('transform', function(d, idx) {
         var l = path.getTotalLength();
         return function (t) {
-          focusOnActivity()
+          if (shouldFocus) {
+            focusOnActivity()
+          }
           var p = path.getPointAtLength(t * l);
           return "translate(" + p.x + "," + p.y + ")";
         }
