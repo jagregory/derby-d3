@@ -245,14 +245,44 @@ var players = [
   teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBPivot,
 ]
 
+var zb = d3.behavior.zoom()
+  .scaleExtent([1, 8])
+  .size([width, height])
+  .on("zoom", zoom)
+
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
-      .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+      .call(zb)
     .append("g");
 
+function zoomTo(pos, scale) {
+  svg.attr("transform", "translate(" + pos + "), scale(" + scale + ")");
+  zb.translate(pos)
+  zb.scale(scale)
+}
+
+var aspectRatio = width / height
+function zoomToRect(rect) {
+  var targetHeight = rect.width / aspectRatio
+
+  if (rect.height < targetHeight) {
+    // make sure the height fits the aspect ratio
+    var delta = targetHeight - rect.height
+    rect = growRect(rect, 0, delta)
+  } else {
+    // make sure the width fits the aspect ratio
+    var targetWidth = rect.height * aspectRatio
+    var delta = targetWidth - rect.width
+    rect = growRect(rect, delta, 0)
+  }
+
+  var scale = width / rect.width
+  zoomTo([-rect.x * scale, -rect.y * scale], scale)
+}
+
 function zoom() {
-  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  zoomTo(d3.event.translate, d3.event.scale)
 }
 
 var trackOutside = svg.append('path')
@@ -263,6 +293,74 @@ var trackOutside = svg.append('path')
 var line = d3.svg.line()
   .tension(0.75)
   .interpolate('cardinal')
+
+function getScreenCoords(el) {
+  var cx = el.getAttribute('cx'),
+    cy = el.getAttribute('cy'),
+    ctm = el.getCTM(),
+    bbox = el.getBBox(),
+    matrix = el.transform.baseVal.getItem(0).matrix
+
+  return {
+    x: matrix.e - bbox.width / 2,
+    y: matrix.f - bbox.height / 2,
+    width: bbox.width,
+    height: bbox.height,
+  }
+}
+
+function unionRect(a, b) {
+  var x1 = Math.min(a.x, b.x),
+    y1 = Math.min(a.y, b.y)
+
+  return {
+    x: x1,
+    y: y1,
+    width: Math.max(a.x + a.width, b.x + b.width) - x1,
+    height: Math.max(a.y + a.height, b.y + b.height) - y1,
+  }
+}
+
+function minimalBoundingRect(query) {
+  return svg.selectAll(query)[0]
+    .map(getScreenCoords)
+    .reduce(unionRect)
+}
+
+function growRect(rect, wd, hd) {
+  var newWidth = rect.width + wd,
+    newHeight = rect.height + hd,
+    widthDelta = newWidth - rect.width,
+    heightDelta = newHeight - rect.height
+
+  return {
+    x: rect.x - (widthDelta / 2),
+    y: rect.y - (heightDelta / 2),
+    width: newWidth,
+    height: newHeight,
+  }
+}
+
+function scaleRect(rect, scaleX, scaleY) {
+  scaleY = scaleY || scaleX
+  var newWidth = rect.width * scaleX,
+    newHeight = rect.height * scaleY,
+    widthDelta = newWidth - rect.width,
+    heightDelta = newHeight - rect.height
+
+  return {
+    x: rect.x - (widthDelta / 2),
+    y: rect.y - (heightDelta / 2),
+    width: newWidth,
+    height: newHeight,
+  }
+}
+
+function focusOnActivity() {
+  var rect = minimalBoundingRect('.player')
+  zoomToRect(scaleRect(rect, 2))
+  // zoomToRect(rect)
+}
 
 var animateFunctions = players.map(function(player) {
   var paths = svg.selectAll('.path')
@@ -289,6 +387,7 @@ var animateFunctions = players.map(function(player) {
       .attrTween('transform', function(d, idx) {
         var l = path.getTotalLength();
         return function (t) {
+          focusOnActivity()
           var p = path.getPointAtLength(t * l);
           return "translate(" + p.x + "," + p.y + ")";
         }
@@ -306,3 +405,5 @@ function step() {
     fn()
   })
 }
+
+focusOnActivity()
