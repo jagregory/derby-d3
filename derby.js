@@ -367,7 +367,7 @@ var animateFunctions = players.map(function(player) {
   var paths = svg.selectAll('.path')
     .data(player.moves)
     .enter()
-      .append('path')
+      .insert('path', 'path')
       .attr('d', function(d) {
         return line(d.points)
       });
