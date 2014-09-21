@@ -9,15 +9,18 @@ function positionIs(pos) {
 
 function createPlayerGraphics(players) {
   var players = svg.selectAll('g.player')
-    .data(players)
+    .data(players, function(d) { return d.id })
+
+  players
     .enter()
       .append('g')
       .attr('class', function(d) {
         return 'player team-' + d.team
       })
-      .attr("transform", function(d) {
-        return "translate(" + d.moves[0].points[0] + ")"
-      })
+  
+  players.attr("transform", function(d) {
+    return "translate(" + d.moves[0].points[0] + ")"
+  })
 
   players.append('circle')
     .attr("r", 10)
@@ -351,6 +354,11 @@ function step() {
   var playersWithMoves = players.filter(function(d) {
     return !!d.moves[d.activeSegment || 0]
   })
+
+  if (playersWithMoves.length == 0) {
+    return
+  }
+
   var nextMovesPaths = svg.selectAll('.path')
     .data(playersWithMoves, function(d) { return d.id })
 
@@ -366,6 +374,10 @@ function step() {
   
   nextMovesPaths.exit().remove()
 
+  d3.selectAll('button')
+    .attr('disabled', 'disabled')
+
+  var n = 0; 
   svg.selectAll('.player')
     .data(playersWithMoves, function(d) { return d.id })
     .transition()
@@ -384,9 +396,28 @@ function step() {
           return "translate(" + p.x + "," + p.y + ")";
         }
       })
+      .each(function() { ++n; }) 
       .each('end', function(d) {
         d.activeSegment = (d.activeSegment || 0) + 1
+
+        if (!--n) {
+          d3.selectAll('button')
+            .attr('disabled', null)
+        }
       })
+}
+
+function reset() {
+  players.forEach(function(p) {
+    delete p.activeSegment
+  })
+
+  createPlayerGraphics(players)
+
+  svg.selectAll('.path')
+    .data([]).exit().remove()
+
+  focusOnActivity()
 }
 
 focusOnActivity()
