@@ -6,6 +6,8 @@ path {
   fill: none;
   stroke: rgba(0,0,0,.05);
   stroke-width: 3px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
 .player {
