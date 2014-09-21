@@ -1,32 +1,40 @@
 var width = 960
 var height = 500
 
-function createPlayerGraphic(p) {
-  var player = svg.append('g')
-    .data([p])
-    .attr('class', function(d) {
-      return 'player team-' + d.team
-    })
-    .attr("transform", function(d) {
-      return "translate(" + d.moves[0].points[0] + ")"
-    });
+function positionIs(pos) {
+  return function(player) {
+    return player.position == pos
+  }
+}
 
-  player.append('circle')
+function createPlayerGraphics(players) {
+  var players = svg.selectAll('g.player')
+    .data(players)
+    .enter()
+      .append('g')
+      .attr('class', function(d) {
+        return 'player team-' + d.team
+      })
+      .attr("transform", function(d) {
+        return "translate(" + d.moves[0].points[0] + ")"
+      })
+
+  players.append('circle')
     .attr("r", 10)
 
-  if (p.position == 'jammer') {
-    player.append('polygon')
-      .attr("points", '8.5,0, 3.6405764746872635,2.6450336353161292, 2.6266444521870533,8.083980388508804, -1.390576474687263,4.279754323328191, -6.876644452187053,4.996174644486023, -4.5,5.51091059616309e-16, -6.876644452187053,-4.996174644486021, -1.390576474687264,-4.2797543233281905, 2.6266444521870516,-8.083980388508806, 3.6405764746872626,-2.64503363531613')
-  } else if (p.position == 'pivot') {
-    player.append('rect')
-      .attr('width', 18)
-      .attr('height', 5)
-      .attr('x', -9)
-      .attr('y', -2.5)
-      .attr('rx', 2)
-  }
+  players.filter(positionIs('jammer'))
+    .append('polygon')
+    .attr("points", '8.5,0, 3.6405764746872635,2.6450336353161292, 2.6266444521870533,8.083980388508804, -1.390576474687263,4.279754323328191, -6.876644452187053,4.996174644486023, -4.5,5.51091059616309e-16, -6.876644452187053,-4.996174644486021, -1.390576474687264,-4.2797543233281905, 2.6266444521870516,-8.083980388508806, 3.6405764746872626,-2.64503363531613')
 
-  return player
+  players.filter(positionIs('pivot'))
+    .append('rect')
+    .attr('width', 18)
+    .attr('height', 5)
+    .attr('x', -9)
+    .attr('y', -2.5)
+    .attr('rx', 2)
+
+  return players
 }
 
 function scaleX(x) {
@@ -78,6 +86,7 @@ var p = playerFromRelative({
 })
 
 var teamAJammer = {
+  id: '1',
   team: 'a',
   position: 'jammer',
   moves: [{
@@ -98,6 +107,7 @@ var teamAJammer = {
 };
 
 var teamAPivot = {
+  id: '2',
   team: 'a',
   position: 'pivot',
   moves: [{
@@ -110,6 +120,7 @@ var teamAPivot = {
 };
 
 var teamABlocker1 = {
+  id: '3',
   team: 'a',
   moves: [{
     duration: .5,
@@ -121,6 +132,7 @@ var teamABlocker1 = {
 };
 
 var teamABlocker2 = {
+  id: '4',
   team: 'a',
   moves: [{
     duration: .25,
@@ -132,6 +144,7 @@ var teamABlocker2 = {
 };
 
 var teamABlocker3 = {
+  id: '5',
   team: 'a',
   moves: [{
     duration: .5,
@@ -142,6 +155,7 @@ var teamABlocker3 = {
 };
 
 var teamBJammer = {
+  id: '6',
   team: 'b',
   position: 'jammer',
   moves: [{
@@ -154,6 +168,7 @@ var teamBJammer = {
 };
 
 var teamBPivot = {
+  id: '7',
   team: 'b',
   position: 'pivot',
   moves: [{
@@ -165,6 +180,7 @@ var teamBPivot = {
 };
 
 var teamBBlocker1 = {
+  id: '8',
   team: 'b',
   moves: [{
     duration: .5,
@@ -183,6 +199,7 @@ var teamBBlocker1 = {
 };
 
 var teamBBlocker2 = {
+  id: '9',
   team: 'b',
   moves: [{
     duration: .5,
@@ -194,6 +211,7 @@ var teamBBlocker2 = {
 };
 
 var teamBBlocker3 = {
+  id: '10',
   team: 'b',
   moves: [{
     duration: .75,
@@ -327,29 +345,36 @@ function focusOnActivity() {
   zoomToRect(scaleRect(rect, 2))
 }
 
-var animateFunctions = players.map(function(player) {
-  var paths = svg.selectAll('.path')
-    .data(player.moves)
+createPlayerGraphics(players)
+
+function step() {
+  var playersWithMoves = players.filter(function(d) {
+    return !!d.moves[d.activeSegment || 0]
+  })
+  var nextMovesPaths = svg.selectAll('.path')
+    .data(playersWithMoves, function(d) { return d.id })
+
+  nextMovesPaths
     .enter()
-      .insert('path', 'path')
-      .attr('d', function(d) {
-        return line(d.points)
-      });
+      .insert('path', '.path')
+      .attr('class', 'path')
 
-  var circle = createPlayerGraphic(player)
+  nextMovesPaths.attr('d', function(d) {
+    var move = d.moves[d.activeSegment || 0]
+    return line(move.points)
+  })
+  
+  nextMovesPaths.exit().remove()
 
-  var activeSegment = 0
-  var trans = function() {
-    if (activeSegment >= paths[0].length) {
-      return
-    }
-
-    var path = paths[0][activeSegment]
-    var move = player.moves[activeSegment]
-
-    circle.transition()
-      .duration(move.duration * 1000)
+  svg.selectAll('.player')
+    .data(playersWithMoves, function(d) { return d.id })
+    .transition()
+      .duration(function(d) {
+        var move = d.moves[d.activeSegment || 0]
+        return move ? move.duration * 1000 : 0
+      })
       .attrTween('transform', function(d, idx) {
+        var path = nextMovesPaths[0][idx]
         var l = path.getTotalLength();
         return function (t) {
           if (shouldFocus) {
@@ -359,18 +384,9 @@ var animateFunctions = players.map(function(player) {
           return "translate(" + p.x + "," + p.y + ")";
         }
       })
-      .each('end', function() {
-        activeSegment++
+      .each('end', function(d) {
+        d.activeSegment = (d.activeSegment || 0) + 1
       })
-  }
-
-  return trans
-})
-
-function step() {
-  animateFunctions.forEach(function(fn) {
-    fn()
-  })
 }
 
 focusOnActivity()
