@@ -1,18 +1,6 @@
 var width = 960
 var height = 500
 
-function flatten(arr) {
-  return arr.reduce(function(a, b) {
-    return a.concat(b)
-  })
-}
-
-function firstOfEach(arr) {
-  return arr.map(function(a) {
-    return a[0]
-  })
-}
-
 function createPlayerGraphic(p) {
   var point = p.moves[0].points[0]
   var player = svg.append('g')
