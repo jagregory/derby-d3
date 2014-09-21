@@ -40,6 +40,23 @@ function createPlayerGraphics(players) {
   return players
 }
 
+function createGuides(guides) {
+  var guideGraphics = d3.select('body').selectAll('.guide')
+    .data(guides)
+    .enter()
+      .insert('div', 'svg')
+      .attr('class', 'guide')
+      .style('display', 'none')
+
+  guideGraphics
+    .append('h1')
+    .text(function(d) { return d.heading })
+
+  guideGraphics
+    .append('div')
+    .html(function(d) { return d.text })
+}
+
 function scaleX(x) {
   return (x * (width / 26)) + 140
 }
@@ -230,6 +247,17 @@ var players = [
   teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBPivot,
 ]
 
+var guides = [{
+  heading: 'Before',
+  text: '<h2 class="team-a">Team a</h2><p>Do something</p><h2 class="team-b">Team b</h2><p>Do something else</p>'
+}, {
+  heading: 'Step 1',
+  text: 'WTF'
+}, {
+  heading: 'Step 2',
+  text: 'CTF'
+}]
+
 var zb = d3.behavior.zoom()
   .scaleExtent([1, 8])
   .size([width, height])
@@ -349,15 +377,27 @@ function focusOnActivity() {
 }
 
 createPlayerGraphics(players)
+createGuides(guides)
+
+var activeSegment = 0
+
+function updateGuide(step) {
+  d3.selectAll('.guide')
+    .style('display', function(d, idx) {
+      return idx == step ? '' : 'none'
+    })
+}
 
 function step() {
   var playersWithMoves = players.filter(function(d) {
-    return !!d.moves[d.activeSegment || 0]
+    return !!d.moves[activeSegment]
   })
 
   if (playersWithMoves.length == 0) {
     return
   }
+
+  updateGuide(activeSegment + 1)
 
   var nextMovesPaths = svg.selectAll('.path')
     .data(playersWithMoves, function(d) { return d.id })
@@ -368,7 +408,7 @@ function step() {
       .attr('class', 'path')
 
   nextMovesPaths.attr('d', function(d) {
-    var move = d.moves[d.activeSegment || 0]
+    var move = d.moves[activeSegment]
     return line(move.points)
   })
   
@@ -382,7 +422,7 @@ function step() {
     .data(playersWithMoves, function(d) { return d.id })
     .transition()
       .duration(function(d) {
-        var move = d.moves[d.activeSegment || 0]
+        var move = d.moves[activeSegment]
         return move ? move.duration * 1000 : 0
       })
       .attrTween('transform', function(d, idx) {
@@ -398,9 +438,8 @@ function step() {
       })
       .each(function() { ++n; }) 
       .each('end', function(d) {
-        d.activeSegment = (d.activeSegment || 0) + 1
-
         if (!--n) {
+          activeSegment++
           d3.selectAll('button')
             .attr('disabled', null)
         }
@@ -408,16 +447,16 @@ function step() {
 }
 
 function reset() {
-  players.forEach(function(p) {
-    delete p.activeSegment
-  })
+  activeSegment = 0
 
   createPlayerGraphics(players)
 
   svg.selectAll('.path')
     .data([]).exit().remove()
 
+  updateGuide(0)
   focusOnActivity()
 }
 
+updateGuide(0)
 focusOnActivity()

@@ -1,3 +1,7 @@
+body {
+  font-family: 'Helvetica Neue', Arial;
+}
+
 path {
   fill: none;
   stroke: rgba(0,0,0,.05);
@@ -19,4 +23,25 @@ path {
 .track {
   stroke: #555;
   stroke-width: 2;
+}
+
+.guide {
+  float: right;
+  width: 30%;
+}
+
+.guide h1 {
+  border-bottom: 3px solid #eee;
+}
+
+.guide h2 {
+  border-bottom: 2px solid #eee;
+}
+
+.guide h2.team-a {
+  border-color: #005FA5;
+}
+
+.guide h2.team-b {
+  border-color: #F00097;
 }
