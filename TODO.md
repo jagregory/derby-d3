@@ -1,5 +1,7 @@
 Client TODO:
 
-  * Restart steps and or loop 
   * Text with steps
   * Direction
+  * Teams/key
+  * autoplay
+  * replay step

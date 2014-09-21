@@ -404,7 +404,7 @@ function step() {
 
   nextMovesPaths
     .enter()
-      .insert('path', '.path')
+      .insert('path', '.player')
       .attr('class', 'path')
 
   nextMovesPaths.attr('d', function(d) {
