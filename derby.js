@@ -388,6 +388,10 @@ function updateGuide(step) {
     })
 }
 
+function getTotalLength() {
+  return this.getTotalLength()
+}
+
 function step() {
   var playersWithMoves = players.filter(function(d) {
     return !!d.moves[activeSegment]
@@ -411,8 +415,19 @@ function step() {
     var move = d.moves[activeSegment]
     return line(move.points)
   })
+  .style('stroke-dasharray', getTotalLength)
+  .style('stroke-dashoffset', getTotalLength)
   
   nextMovesPaths.exit().remove()
+
+  nextMovesPaths.transition()
+    .duration(function(d) {
+      var move = d.moves[activeSegment]
+      return move ? move.duration * 1000 : 0
+    })
+    .styleTween('stroke-dashoffset', function() {
+      return d3.interpolateNumber(this.getTotalLength(), 0)
+    })
 
   d3.selectAll('button')
     .attr('disabled', 'disabled')
