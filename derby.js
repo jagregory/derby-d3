@@ -2,10 +2,14 @@ var width = 960
 var height = 500
 
 function createPlayerGraphic(p) {
-  var point = p.moves[0].points[0]
   var player = svg.append('g')
-    .attr('class', 'player team-' + p.team)
-    .attr("transform", "translate(" + point + ")");
+    .data([p])
+    .attr('class', function(d) {
+      return 'player team-' + d.team
+    })
+    .attr("transform", function(d) {
+      return "translate(" + d.moves[0].points[0] + ")"
+    });
 
   player.append('circle')
     .attr("r", 10)
