@@ -19,7 +19,7 @@ function createPlayerGraphics(players) {
       })
   
   players.attr("transform", function(d) {
-    return "translate(" + d.moves[0].points[0] + ")"
+    return "translate(" + (d.placement || d.moves[0].points[0]) + ")"
   })
 
   players.append('circle')
@@ -71,6 +71,7 @@ function scale(xy) {
 
 function playerFromRelative(relative) {
   var absolute = relative
+  absolute.placement = scale(relative.placement)
   absolute.moves = relative.moves.map(function(move) {
     return {
       duration: move.duration,
@@ -85,6 +86,7 @@ var json = {
     id: '1',
     team: '1',
     position: 'jammer',
+    placement: [10, 1.25],
     moves: [{
       duration: 1,
       points: [
@@ -104,6 +106,7 @@ var json = {
     id: '2',
     team: '1',
     position: 'pivot',
+    placement: [5.75, 1.25],
     moves: [{
       duration: .5,
       points: [
@@ -114,6 +117,7 @@ var json = {
   }, {
     id: '3',
     team: '1',
+    placement: [6.5, .5],
     moves: [{
       duration: .5,
       points: [
@@ -124,6 +128,7 @@ var json = {
   }, {
     id: '4',
     team: '1',
+    placement: [7.25, 1.25],
     moves: [{
       duration: .25,
       points: [
@@ -134,6 +139,7 @@ var json = {
   }, {
     id: '5',
     team: '1',
+    placement: [6.5, 2],
     moves: [{
       duration: .5,
       points: [
@@ -144,6 +150,7 @@ var json = {
     id: '6',
     team: '2',
     position: 'jammer',
+    placement: [10, 2.2],
     moves: [{
       duration: 1,
       points: [
@@ -155,6 +162,7 @@ var json = {
     id: '7',
     team: '2',
     position: 'pivot',
+    placement: [5.75, 2.45],
     moves: [{
       duration: .75,
       points: [
@@ -164,6 +172,7 @@ var json = {
   }, {
     id: '8',
     team: '2',
+    placement: [6.5, 1.25],
     moves: [{
       duration: .5,
       points: [
@@ -181,6 +190,7 @@ var json = {
   }, {
     id: '9',
     team: '2',
+    placement: [7.25, 2.45],
     moves: [{
       duration: .5,
       points: [
@@ -191,6 +201,7 @@ var json = {
   }, {
     id: '10',
     team: '2',
+    placement: [6.5, 3],
     moves: [{
       duration: .75,
       points: [
