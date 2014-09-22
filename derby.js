@@ -80,147 +80,128 @@ function playerFromRelative(relative) {
   return absolute
 }
 
-var teamAJammer = playerFromRelative({
-  id: '1',
-  team: 'a',
-  position: 'jammer',
-  moves: [{
-    duration: 1,
-    points: [
-      [10, 1.25],
-      [7.55, 1.25],
-    ]
+var json = {
+  players: [{
+    id: '1',
+    team: 'a',
+    position: 'jammer',
+    moves: [{
+      duration: 1,
+      points: [
+        [10, 1.25],
+        [7.55, 1.25],
+      ]
+    }, {
+      duration: 1,
+      points: [
+        [7.55, 1.25],
+        [7.75, .75],
+        [7, .5],
+        [4.5, 1.5],
+      ]
+    }]
   }, {
-    duration: 1,
-    points: [
-      [7.55, 1.25],
-      [7.75, .75],
-      [7, .5],
-      [4.5, 1.5],
-    ]
-  }]
-})
-
-var teamAPivot = playerFromRelative({
-  id: '2',
-  team: 'a',
-  position: 'pivot',
-  moves: [{
-    duration: .5,
-    points: [
-      [5.75, 1.25],
-      [5.75, 1.75],
-    ]
-  }]
-})
-
-var teamABlocker1 = playerFromRelative({
-  id: '3',
-  team: 'a',
-  moves: [{
-    duration: .5,
-    points: [
-      [6.5, .5],
-      [7.15, 1.1],
-    ]
-  }]
-})
-
-var teamABlocker2 = playerFromRelative({
-  id: '4',
-  team: 'a',
-  moves: [{
-    duration: .25,
-    points: [
-      [7.25, 1.25],
-      [6.5, 1.25],
-    ]
-  }]
-})
-
-var teamABlocker3 = playerFromRelative({
-  id: '5',
-  team: 'a',
-  moves: [{
-    duration: .5,
-    points: [
-      [6.5, 2],
-    ]
-  }]
-})
-
-var teamBJammer = playerFromRelative({
-  id: '6',
-  team: 'b',
-  position: 'jammer',
-  moves: [{
-    duration: 1,
-    points: [
-      [10, 2.2],
-      [7, 1.75],
-    ]
-  }]
-})
-
-var teamBPivot = playerFromRelative({
-  id: '7',
-  team: 'b',
-  position: 'pivot',
-  moves: [{
-    duration: .75,
-    points: [
-      [5.75, 2.45],
-    ]
-  }]
-})
-
-var teamBBlocker1 = playerFromRelative({
-  id: '8',
-  team: 'b',
-  moves: [{
-    duration: .5,
-    points: [
-      [6.5, 1.25],
-      [5.75, -.25],
-    ]
+    id: '2',
+    team: 'a',
+    position: 'pivot',
+    moves: [{
+      duration: .5,
+      points: [
+        [5.75, 1.25],
+        [5.75, 1.75],
+      ]
+    }]
   }, {
-    duration: 1,
-    points: [
-      [5.75, -.25],
-      [7.25, -.25],
-      [7, .4],
-    ]
+    id: '3',
+    team: 'a',
+    moves: [{
+      duration: .5,
+      points: [
+        [6.5, .5],
+        [7.15, 1.1],
+      ]
+    }]
+  }, {
+    id: '4',
+    team: 'a',
+    moves: [{
+      duration: .25,
+      points: [
+        [7.25, 1.25],
+        [6.5, 1.25],
+      ]
+    }]
+  }, {
+    id: '5',
+    team: 'a',
+    moves: [{
+      duration: .5,
+      points: [
+        [6.5, 2],
+      ]
+    }]
+  }, {
+    id: '6',
+    team: 'b',
+    position: 'jammer',
+    moves: [{
+      duration: 1,
+      points: [
+        [10, 2.2],
+        [7, 1.75],
+      ]
+    }]
+  }, {
+    id: '7',
+    team: 'b',
+    position: 'pivot',
+    moves: [{
+      duration: .75,
+      points: [
+        [5.75, 2.45],
+      ]
+    }]
+  }, {
+    id: '8',
+    team: 'b',
+    moves: [{
+      duration: .5,
+      points: [
+        [6.5, 1.25],
+        [5.75, -.25],
+      ]
+    }, {
+      duration: 1,
+      points: [
+        [5.75, -.25],
+        [7.25, -.25],
+        [7, .4],
+      ]
+    }]
+  }, {
+    id: '9',
+    team: 'b',
+    moves: [{
+      duration: .5,
+      points: [
+        [7.25, 2.45],
+        [7, 2.45],
+      ]
+    }]
+  }, {
+    id: '10',
+    team: 'b',
+    moves: [{
+      duration: .75,
+      points: [
+        [6.5, 3],
+        [6.5, 2.7],
+      ]
+    }]
   }]
-})
+}
 
-var teamBBlocker2 = playerFromRelative({
-  id: '9',
-  team: 'b',
-  moves: [{
-    duration: .5,
-    points: [
-      [7.25, 2.45],
-      [7, 2.45],
-    ]
-  }]
-})
-
-var teamBBlocker3 = playerFromRelative({
-  id: '10',
-  team: 'b',
-  moves: [{
-    duration: .75,
-    points: [
-      [6.5, 3],
-      [6.5, 2.7],
-    ]
-  }]
-})
-
-var players = [
-  teamAJammer, teamABlocker1, teamABlocker2, teamABlocker3, teamAPivot,
-  teamBJammer, teamBBlocker1, teamBBlocker2, teamBBlocker3, teamBPivot,
-]
+var players = json.players.map(playerFromRelative)
 
 var guides = [{
   heading: 'Before',
