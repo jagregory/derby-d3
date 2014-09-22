@@ -18,7 +18,7 @@ path.path {
   fill: #005FA5;
 }
 
-.player.team-b {
+.player.team-2 {
   fill: #F00097;
 }
 
@@ -44,10 +44,10 @@ path.path {
   border-bottom: 2px solid #eee;
 }
 
-.guide h2.team-a {
+.guide h2.team-1 {
   border-color: #005FA5;
 }
 
-.guide h2.team-b {
+.guide h2.team-2 {
   border-color: #F00097;
 }

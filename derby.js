@@ -83,7 +83,7 @@ function playerFromRelative(relative) {
 var json = {
   players: [{
     id: '1',
-    team: 'a',
+    team: '1',
     position: 'jammer',
     moves: [{
       duration: 1,
@@ -102,7 +102,7 @@ var json = {
     }]
   }, {
     id: '2',
-    team: 'a',
+    team: '1',
     position: 'pivot',
     moves: [{
       duration: .5,
@@ -113,7 +113,7 @@ var json = {
     }]
   }, {
     id: '3',
-    team: 'a',
+    team: '1',
     moves: [{
       duration: .5,
       points: [
@@ -123,7 +123,7 @@ var json = {
     }]
   }, {
     id: '4',
-    team: 'a',
+    team: '1',
     moves: [{
       duration: .25,
       points: [
@@ -133,7 +133,7 @@ var json = {
     }]
   }, {
     id: '5',
-    team: 'a',
+    team: '1',
     moves: [{
       duration: .5,
       points: [
@@ -142,7 +142,7 @@ var json = {
     }]
   }, {
     id: '6',
-    team: 'b',
+    team: '2',
     position: 'jammer',
     moves: [{
       duration: 1,
@@ -153,7 +153,7 @@ var json = {
     }]
   }, {
     id: '7',
-    team: 'b',
+    team: '2',
     position: 'pivot',
     moves: [{
       duration: .75,
@@ -163,7 +163,7 @@ var json = {
     }]
   }, {
     id: '8',
-    team: 'b',
+    team: '2',
     moves: [{
       duration: .5,
       points: [
@@ -180,7 +180,7 @@ var json = {
     }]
   }, {
     id: '9',
-    team: 'b',
+    team: '2',
     moves: [{
       duration: .5,
       points: [
@@ -190,7 +190,7 @@ var json = {
     }]
   }, {
     id: '10',
-    team: 'b',
+    team: '2',
     moves: [{
       duration: .75,
       points: [
@@ -205,7 +205,7 @@ var players = json.players.map(playerFromRelative)
 
 var guides = [{
   heading: 'Before',
-  text: '<h2 class="team-a">Team a</h2><p>Do something</p><h2 class="team-b">Team b</h2><p>Do something else</p>'
+  text: '<h2 class="team-1">Team a</h2><p>Do something</p><h2 class="team-2">Team b</h2><p>Do something else</p>'
 }, {
   heading: 'Step 1',
   text: 'WTF'
