@@ -70,177 +70,152 @@ function scale(xy) {
 }
 
 function playerFromRelative(relative) {
-  var moves = relative.moves.map(function(move) {
+  var absolute = relative
+  absolute.moves = relative.moves.map(function(move) {
     return {
       duration: move.duration,
       points: move.points.map(scale),
     }
   })
-
-  moves.splice(0, 0, {
-    duration: .5,
-    points: [
-      scale([relative.x, relative.y]),
-    ]
-  })
-
-  return {
-    team: relative.team,
-    position: relative.position,
-    moves: moves,
-  }
+  return absolute
 }
 
-var p = playerFromRelative({
-  team: 'a',
-  position: 'jammer',
-  x: 12,
-  y: 1,
-  moves: [{
-    duration: .5,
-    points: [
-      [12, 1],
-      [5, 1]
-    ]
-  }]
-})
-
-var teamAJammer = {
+var teamAJammer = playerFromRelative({
   id: '1',
   team: 'a',
   position: 'jammer',
   moves: [{
     duration: 1,
     points: [
-      [500, 85],
-      [420, 85],
+      [10, 1.25],
+      [7.55, 1.25],
     ]
   }, {
     duration: 1,
     points: [
-      [420, 85],
-      [430, 75],
-      [400, 60],
-      [300, 90],
+      [7.55, 1.25],
+      [7.75, .75],
+      [7, .5],
+      [4.5, 1.5],
     ]
   }]
-};
+})
 
-var teamAPivot = {
+var teamAPivot = playerFromRelative({
   id: '2',
   team: 'a',
   position: 'pivot',
   moves: [{
     duration: .5,
     points: [
-      [350, 87.5],
-      [350, 100],
+      [5.75, 1.25],
+      [5.75, 1.75],
     ]
   }]
-};
+})
 
-var teamABlocker1 = {
+var teamABlocker1 = playerFromRelative({
   id: '3',
   team: 'a',
   moves: [{
     duration: .5,
     points: [
-      [380, 65],
-      [405, 80],
+      [6.5, .5],
+      [7.15, 1.1],
     ]
   }]
-};
+})
 
-var teamABlocker2 = {
+var teamABlocker2 = playerFromRelative({
   id: '4',
   team: 'a',
   moves: [{
     duration: .25,
     points: [
-      [410, 87.5],
-      [380, 87.5],
+      [7.25, 1.25],
+      [6.5, 1.25],
     ]
   }]
-};
+})
 
-var teamABlocker3 = {
+var teamABlocker3 = playerFromRelative({
   id: '5',
   team: 'a',
   moves: [{
     duration: .5,
     points: [
-      [380, 110],
+      [6.5, 2],
     ]
   }]
-};
+})
 
-var teamBJammer = {
+var teamBJammer = playerFromRelative({
   id: '6',
   team: 'b',
   position: 'jammer',
   moves: [{
     duration: 1,
     points: [
-      [500, 115],
-      [400, 100],
+      [10, 2.2],
+      [7, 1.75],
     ]
   }]
-};
+})
 
-var teamBPivot = {
+var teamBPivot = playerFromRelative({
   id: '7',
   team: 'b',
   position: 'pivot',
   moves: [{
     duration: .75,
     points: [
-      [350, 120],
+      [5.75, 2.45],
     ]
   }]
-};
+})
 
-var teamBBlocker1 = {
+var teamBBlocker1 = playerFromRelative({
   id: '8',
   team: 'b',
   moves: [{
     duration: .5,
     points: [
-      [380, 87.5],
-      [350, 40],
+      [6.5, 1.25],
+      [5.75, -.25],
     ]
   }, {
     duration: 1,
     points: [
-      [350, 40],
-      [410, 40],
-      [400, 60],
+      [5.75, -.25],
+      [7.25, -.25],
+      [7, .4],
     ]
   }]
-};
+})
 
-var teamBBlocker2 = {
+var teamBBlocker2 = playerFromRelative({
   id: '9',
   team: 'b',
   moves: [{
     duration: .5,
     points: [
-      [410, 120],
-      [400, 120],
+      [7.25, 2.45],
+      [7, 2.45],
     ]
   }]
-};
+})
 
-var teamBBlocker3 = {
+var teamBBlocker3 = playerFromRelative({
   id: '10',
   team: 'b',
   moves: [{
     duration: .75,
     points: [
-      [380, 135],
-      [380, 130],
+      [6.5, 3],
+      [6.5, 2.7],
     ]
   }]
-};
+})
 
 var players = [
   teamAJammer, teamABlocker1, teamABlocker2, teamABlocker3, teamAPivot,
