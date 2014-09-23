@@ -73,6 +73,10 @@ function playerFromRelative(relative) {
   var absolute = relative
   absolute.placement = scale(relative.placement)
   absolute.moves = relative.moves.map(function(move) {
+    if (!move) {
+      return null
+    }
+
     return {
       duration: move.duration,
       points: move.points.map(scale),
@@ -82,137 +86,102 @@ function playerFromRelative(relative) {
 }
 
 var json = {
-  players: [{
-    id: '1',
-    team: '1',
-    position: 'jammer',
-    placement: [10, 1.25],
-    moves: [{
-      duration: 1,
-      points: [
-        [10, 1.25],
-        [7.55, 1.25],
-      ]
+  "teams": [{
+    "id": "1"
+  }, {
+    "id": "2"
+  }],
+
+  "players": [{
+    "id": "1",
+    "team": "1",
+    "placement": { "x": 10, "y": 1.25 },
+    "properties": {
+      "position": "jammer"
+    }
+  }, {
+    "id": "2",
+    "team": "1",
+    "placement": { "x": 5.75, "y": 1.25 },
+    "properties": {
+      "position": "pivot"
+    }
+  }, {
+    "id": "3",
+    "team": "1",
+    "placement": { "x": 6.5, "y": 0.5 }
+  }, {
+    "id": "4",
+    "team": "1",
+    "placement": { "x": 7.25, "y": 1.25 }
+  }, {
+    "id": "5",
+    "team": "1",
+    "placement": { "x": 6.5, "y": 2 }
+  }, {
+    "id": "6",
+    "team": "2",
+    "placement": { "x": 10, "y": 2.2 },
+    "properties": {
+      "position": "jammer"
+    }
+  }, {
+    "id": "7",
+    "team": "2",
+    "placement": { "x": 5.75, "y": 2.45 },
+    "properties": {
+      "position": "pivot"
+    }
+  }, {
+    "id": "8",
+    "team": "2",
+    "placement": { "x": 6.5, "y": 1.25 }
+  }, {
+    "id": "9",
+    "team": "2",
+    "placement": { "x": 7.25, "y": 2.45 }
+  }, {
+    "id": "10",
+    "team": "2",
+    "placement": { "x": 6.5, "y": 3 }
+  }],
+
+  "play": {
+    "guide": {
+      "heading": "Before",
+      "text": "<h2 class=\"team-a\">Team a</h2><p>Do something</p><h2 class=\"team-b\">Team b</h2><p>Do something else</p>"
+    },
+    "moves": [{
+      "guide": {
+        "heading": "Step 1",
+        "text": "WTF"
+      },
+      "players": {
+        "1":  { "duration": 1,    "steps": [{ "x": 10, "y": 1.25 }, { "x": 7.55, "y": 1.25 }] },
+        "2":  { "duration": 0.5,  "steps": [{ "x": 5.75, "y": 1.25 }, { "x": 5.75, "y": 1.75 }] },
+        "3":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 0.5 }, { "x": 7.15, "y": 1.1 }] },
+        "4":  { "duration": 0.25, "steps": [{ "x": 7.25, "y": 1.25 }, { "x": 6.5, "y": 1.25 }] },
+        "6":  { "duration": 1,    "steps": [{ "x": 10, "y": 2.2 }, { "x": 7, "y": 1.75 }] },
+        "8":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 1.25 }, { "x": 5.75, "y": -0.25 }] },
+        "9":  { "duration": 0.5,  "steps": [{ "x": 7.25, "y": 2.45 }, { "x": 7, "y": 2.45 }] },
+        "10": { "duration": 0.75, "steps": [{ "x": 6.5, "y": 3 }, { "x": 6.5, "y": 2.7 }] }
+      }
     }, {
-      duration: 1,
-      points: [
-        [7.55, 1.25],
-        [7.75, .75],
-        [7, .5],
-        [4.5, 1.5],
-      ]
+      "guide": {
+        "heading": "Step 2",
+        "text": "CTF"
+      },
+      "players": {
+        "1": { "duration": 1, "steps": [{ "x": 7.55, "y": 1.25 }, { "x": 7.75, "y": 0.75 }, { "x": 7, "y": 0.5 }, { "x": 4.5, "y": 1.5 }] },
+        "8": { "duration": 1, "steps": [{ "x": 5.75, "y": -0.25 }, { "x": 7.25, "y": -0.25 }, { "x": 7, "y": 0.4 }] }
+      }
     }]
-  }, {
-    id: '2',
-    team: '1',
-    position: 'pivot',
-    placement: [5.75, 1.25],
-    moves: [{
-      duration: .5,
-      points: [
-        [5.75, 1.25],
-        [5.75, 1.75],
-      ]
-    }]
-  }, {
-    id: '3',
-    team: '1',
-    placement: [6.5, .5],
-    moves: [{
-      duration: .5,
-      points: [
-        [6.5, .5],
-        [7.15, 1.1],
-      ]
-    }]
-  }, {
-    id: '4',
-    team: '1',
-    placement: [7.25, 1.25],
-    moves: [{
-      duration: .25,
-      points: [
-        [7.25, 1.25],
-        [6.5, 1.25],
-      ]
-    }]
-  }, {
-    id: '5',
-    team: '1',
-    placement: [6.5, 2],
-    moves: [{
-      duration: .5,
-      points: [
-        [6.5, 2],
-      ]
-    }]
-  }, {
-    id: '6',
-    team: '2',
-    position: 'jammer',
-    placement: [10, 2.2],
-    moves: [{
-      duration: 1,
-      points: [
-        [10, 2.2],
-        [7, 1.75],
-      ]
-    }]
-  }, {
-    id: '7',
-    team: '2',
-    position: 'pivot',
-    placement: [5.75, 2.45],
-    moves: [{
-      duration: .75,
-      points: [
-        [5.75, 2.45],
-      ]
-    }]
-  }, {
-    id: '8',
-    team: '2',
-    placement: [6.5, 1.25],
-    moves: [{
-      duration: .5,
-      points: [
-        [6.5, 1.25],
-        [5.75, -.25],
-      ]
-    }, {
-      duration: 1,
-      points: [
-        [5.75, -.25],
-        [7.25, -.25],
-        [7, .4],
-      ]
-    }]
-  }, {
-    id: '9',
-    team: '2',
-    placement: [7.25, 2.45],
-    moves: [{
-      duration: .5,
-      points: [
-        [7.25, 2.45],
-        [7, 2.45],
-      ]
-    }]
-  }, {
-    id: '10',
-    team: '2',
-    placement: [6.5, 3],
-    moves: [{
-      duration: .75,
-      points: [
-        [6.5, 3],
-        [6.5, 2.7],
-      ]
-    }]
-  }]
+  }
 }
 
-var players = json.players.map(playerFromRelative)
+var result = Parse(json)
+
+var players = result.players.map(playerFromRelative)
 
 var guides = [{
   heading: 'Before',
