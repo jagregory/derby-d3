@@ -149,7 +149,7 @@ var json = {
   "play": {
     "guide": {
       "heading": "Before",
-      "text": "<h2 class=\"team-a\">Team a</h2><p>Do something</p><h2 class=\"team-b\">Team b</h2><p>Do something else</p>"
+      "text": "<h2 class=\"team-1\">Team 1</h2><p>Do something</p><h2 class=\"team-2\">Team 2</h2><p>Do something else</p>"
     },
     "moves": [{
       "guide": {
@@ -182,17 +182,7 @@ var json = {
 var result = Parse(json)
 
 var players = result.players.map(playerFromRelative)
-
-var guides = [{
-  heading: 'Before',
-  text: '<h2 class="team-1">Team a</h2><p>Do something</p><h2 class="team-2">Team b</h2><p>Do something else</p>'
-}, {
-  heading: 'Step 1',
-  text: 'WTF'
-}, {
-  heading: 'Step 2',
-  text: 'CTF'
-}]
+var guides = result.guides
 
 var zb = d3.behavior.zoom()
   .scaleExtent([1, 8])

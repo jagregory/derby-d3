@@ -62,7 +62,7 @@
   "play": {
     "guide": {
       "heading": "Before",
-      "text": "<h2 class=\"team-a\">Team a</h2><p>Do something</p><h2 class=\"team-b\">Team b</h2><p>Do something else</p>"
+      "text": "<h2 class=\"team-1\">Team 1</h2><p>Do something</p><h2 class=\"team-2\">Team 2</h2><p>Do something else</p>"
     },
     "moves": [{
       "guide": {
