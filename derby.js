@@ -57,21 +57,21 @@ function createGuides(guides) {
     .html(function(d) { return d.text })
 }
 
-function scaleX(x) {
+function toScreenX(x) {
   return (x * (width / 26)) + 140
 }
 
-function scaleY(y) {
+function toScreenY(y) {
   return (y * height / 17) + 50
 }
 
-function scale(xy) {
-  return [scaleX(xy[0]), scaleY(xy[1])]
+function toScreen(xy) {
+  return [toScreenX(xy[0]), toScreenY(xy[1])]
 }
 
-function playerFromRelative(relative) {
+function playerFromRelativeToScreenCoordinates(relative) {
   var absolute = relative
-  absolute.placement = scale(relative.placement)
+  absolute.placement = toScreen(relative.placement)
   absolute.moves = relative.moves.map(function(move) {
     if (!move) {
       return null
@@ -79,7 +79,7 @@ function playerFromRelative(relative) {
 
     return {
       duration: move.duration,
-      points: move.points.map(scale),
+      points: move.points.map(toScreen),
     }
   })
   return absolute
@@ -181,7 +181,7 @@ var json = {
 
 var result = Parse(json)
 
-var players = result.players.map(playerFromRelative)
+var players = result.players.map(playerFromRelativeToScreenCoordinates)
 var guides = result.guides
 
 var zb = d3.behavior.zoom()
