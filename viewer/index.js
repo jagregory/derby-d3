@@ -3,7 +3,7 @@ var width = 960,
 
 var coordinateSystem = require('./coordinate-system')(width, height),
   Geometry = require('./geometry'),
-  Zoom = require('./zoom')
+  Camera = require('./camera')
 
 function positionIs(pos) {
   return function(player) {
@@ -81,32 +81,6 @@ var line = d3.svg.line()
   .tension(0.75)
   .interpolate('cardinal')
 
-function getScreenCoords(el) {
-  var cx = el.getAttribute('cx'),
-    cy = el.getAttribute('cy'),
-    ctm = el.getCTM(),
-    bbox = el.getBBox(),
-    matrix = el.transform.baseVal.getItem(0).matrix
-
-  return {
-    x: matrix.e - bbox.width / 2,
-    y: matrix.f - bbox.height / 2,
-    width: bbox.width,
-    height: bbox.height,
-  }
-}
-
-function minimalBoundingRect(svg, query) {
-  return svg.selectAll(query)[0]
-    .map(getScreenCoords)
-    .reduce(Geometry.unionRect)
-}
-
-function focusOnActivity(svg, zoom) {
-  var rect = minimalBoundingRect(svg, '.player')
-  zoom.zoomToRect(Geometry.scaleRect(rect, 2))
-}
-
 var activeSegment = 0
 
 function updateGuide(step) {
@@ -120,7 +94,7 @@ function getTotalLength() {
   return this.getTotalLength()
 }
 
-function step(svg, zoom, players) {
+function step(svg, camera, players) {
   var playersWithMoves = players.filter(function(d) {
     return !!d.moves[activeSegment]
   })
@@ -172,8 +146,8 @@ function step(svg, zoom, players) {
         var path = nextMovesPaths[0][idx]
         var l = path.getTotalLength();
         return function (t) {
-          if (zoom.shouldFocus()) {
-            focusOnActivity(svg, zoom)
+          if (camera.shouldFocus()) {
+            camera.focusOnActivity()
           }
           var p = path.getPointAtLength(t * l);
           return "translate(" + p.x + "," + p.y + ")";
@@ -189,7 +163,7 @@ function step(svg, zoom, players) {
       })
 }
 
-function reset(svg, zoom, players) {
+function reset(svg, camera, players) {
   activeSegment = 0
 
   createPlayerGraphics(svg, players)
@@ -198,21 +172,22 @@ function reset(svg, zoom, players) {
     .data([]).exit().remove()
 
   updateGuide(0)
-  focusOnActivity(svg, zoom)
+  shouldFocus = true
+  camera.focusOnActivity()
 }
 
 module.exports = function() {
   var players = [],
     guides = []
 
-  var svg = d3.select("body").append("svg")
+  var board = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g");
 
-  var zoom = Zoom(width, height)
+  var camera = Camera(width, height, board)
 
-  var trackOutside = svg.append('path')
+  var trackOutside = board.append('path')
     .attr('class', 'track')
     .attr('d', 'M80.8,6.1 l106.7,-6.1 a8.08,8.08 0 0,1 0,161.5 l-106.7,6.1 a8.08,8.08 0 0,1 0,-161.5z m0,39.6 a3.81,3.81 0 0,0 0,76.2 l106.7,0 a3.81,3.81 0 0,0 0,-76.2z')
     .attr('transform', 'translate(120, 40), scale(2.5)')
@@ -221,17 +196,17 @@ module.exports = function() {
     start: function(p, g) {
       players = p.map(playerFromRelativeToScreenCoordinates), guides = g
       createGuides(guides)
-      reset(svg, zoom, players)
+      reset(board, camera, players)
     },
 
     step: function() {
-      step(svg, zoom, players)
+      step(board, camera, players)
     },
 
     reset: function() {
-      reset(svg, zoom, players)
+      reset(board, camera, players)
     },
 
-    shouldFocus: zoom.shouldFocus
+    shouldFocus: camera.shouldFocus
   }
 }
