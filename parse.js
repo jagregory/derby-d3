@@ -103,4 +103,4 @@ function Parse(json) {
   }
 }
 
-(typeof global === 'undefined' ? window : global).Parse = Parse
+module.exports = Parse
