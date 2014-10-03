@@ -229,6 +229,8 @@ module.exports = function() {
 
     reset: function() {
       reset(svg, zoom, players)
-    }
+    },
+
+    shouldFocus: zoom.shouldFocus
   }
 }

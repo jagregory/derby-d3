@@ -21,10 +21,14 @@ module.exports = function(width, height) {
   var svg = d3.select('body svg').call(zb)
 
   return {
-    shouldFocus: function() {
+    shouldFocus: function(v) {
+      if (typeof v !== 'undefined') {
+        shouldFocus = v
+      }
+
       return shouldFocus
     },
-    
+
     zoomToRect: function(rect) {
       var targetHeight = rect.width / aspectRatio
 

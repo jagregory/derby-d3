@@ -17,4 +17,8 @@ $(function() {
   $('#reset').click(function() {
     viewer.reset()
   })
+
+  $('#shouldFocus').change(function() {
+    viewer.shouldFocus(!viewer.shouldFocus())
+  })
 })
