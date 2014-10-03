@@ -220,6 +220,7 @@ module.exports = function() {
   return {
     start: function(p, g) {
       players = p.map(playerFromRelativeToScreenCoordinates), guides = g
+      createGuides(guides)
       reset(svg, zoom, players)
     },
 
