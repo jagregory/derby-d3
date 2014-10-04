@@ -180,7 +180,7 @@ module.exports = function() {
   var players = [],
     guides = []
 
-  var board = d3.select("body").append("svg")
+  var board = d3.select("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g");
