@@ -1,4 +1,4 @@
-require('../parse')
+var Parse = require('../parse')
 
 describe('parsing play json', function() {
   var json = null
@@ -196,6 +196,16 @@ describe('parsing play json', function() {
         text: "Second Text"
       })
       expect(result.guides[2]).toEqual(null)
+    })
+
+    it('sets the title', function() {
+      var result = Parse({
+        "play": {
+          "title": "blah"
+        }
+      })
+
+      expect(result.title).toEqual('blah')
     })
   })
 

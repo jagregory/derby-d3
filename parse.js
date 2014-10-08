@@ -97,9 +97,10 @@ function Parse(json) {
   var guides = parseGuides(json)
 
   return {
-    teams: teams,
+    guides: guides,
     players: players,
-    guides: guides
+    teams: teams,
+    title: (json.play || {}).title
   }
 }
 

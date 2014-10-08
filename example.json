@@ -60,6 +60,7 @@
   }],
 
   "play": {
+    "title": "Successful first pass",
     "guide": {
       "heading": "Before",
       "text": "<h2 class=\"team-1\">Team 1</h2><p>Do something</p><h2 class=\"team-2\">Team 2</h2><p>Do something else</p>"
