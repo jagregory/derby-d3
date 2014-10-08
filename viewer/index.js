@@ -2,9 +2,10 @@ var width = 960,
   height = 500
 
 var coordinateSystem = require('./coordinate-system')(width, height),
-  Geometry = require('./geometry'),
   Camera = require('./camera'),
-  Guides = require('./guides')
+  Geometry = require('./geometry'),
+  Guides = require('./guides'),
+  Shapes = require('./shapes')
 
 function positionIs(pos) {
   return function(player) {
@@ -32,7 +33,7 @@ function createPlayerGraphics(svg, players) {
 
   players.filter(positionIs('jammer'))
     .append('polygon')
-    .attr("points", '8.5,0, 3.6405764746872635,2.6450336353161292, 2.6266444521870533,8.083980388508804, -1.390576474687263,4.279754323328191, -6.876644452187053,4.996174644486023, -4.5,5.51091059616309e-16, -6.876644452187053,-4.996174644486021, -1.390576474687264,-4.2797543233281905, 2.6266444521870516,-8.083980388508806, 3.6405764746872626,-2.64503363531613')
+    .attr("points", Shapes.star)
 
   players.filter(positionIs('pivot'))
     .append('rect')
@@ -173,7 +174,7 @@ module.exports = function() {
 
   var trackOutside = board.append('path')
     .attr('class', 'track')
-    .attr('d', 'M80.8,6.1 l106.7,-6.1 a8.08,8.08 0 0,1 0,161.5 l-106.7,6.1 a8.08,8.08 0 0,1 0,-161.5z m0,39.6 a3.81,3.81 0 0,0 0,76.2 l106.7,0 a3.81,3.81 0 0,0 0,-76.2z')
+    .attr('d', Shapes.track)
     .attr('transform', 'translate(120, 40), scale(2.5)')
 
   return {
