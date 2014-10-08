@@ -23,6 +23,9 @@ function createPlayerGraphics(svg, players) {
       .attr('class', function(d) {
         return 'player team-' + d.team
       })
+      .attr('id', function(d) {
+        return 'player-' + d.id
+      })
   
   players.attr("transform", function(d) {
     return "translate(" + (d.placement || d.moves[0].points[0]) + ")"

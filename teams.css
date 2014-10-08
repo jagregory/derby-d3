@@ -1,21 +1,24 @@
-.player.team-1 {
+.player.team-1, .guide .team-1 {
   fill: #005FA5;
+  color: #005FA5;
 }
 
 .player.team-1 .outline {
   stroke: #005FA5;
 }
 
-.player.team-2 {
+.player.team-2, .guide .team-2 {
   fill: #F00097;
+  color: #F00097;
 }
 
 .player.team-2 .outline {
   stroke: #F00097;
 }
 
-.player.team-zebra {
+.player.team-zebra, .guide .team-zebra {
   fill: #000;
+  color: #000;
 }
 
 .player.team-zebra .outline {

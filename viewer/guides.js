@@ -9,11 +9,11 @@ module.exports = {
 
     guideGraphics
       .append('h1')
-      .text(function(d) { return d.heading })
+      .text(function(d) { return d ? d.heading : '' })
 
     guideGraphics
       .append('div')
-      .html(function(d) { return d.text })
+      .html(function(d) { return d ? d.text : '' })
   },
 
   update: function(step) {
