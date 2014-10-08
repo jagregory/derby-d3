@@ -1,239 +1,143 @@
-var width = 960
-var height = 500
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Parse = require('./parse'),
+  Viewer = require('./viewer')
 
-function positionIs(pos) {
-  return function(player) {
-    return player.position == pos
-  }
-}
+var viewer = Viewer()
 
-function createPlayerGraphics(players) {
-  var players = svg.selectAll('g.player')
-    .data(players, function(d) { return d.id })
+$.get('/example.json', function(json) {
+  var result = Parse(json)
 
-  players
-    .enter()
-      .append('g')
-      .attr('class', function(d) {
-        return 'player team-' + d.team
-      })
+  $('#title').text(result.title)
+  $('title').text(result.title + ' - Derby demos')
   
-  players.attr("transform", function(d) {
-    return "translate(" + (d.placement || d.moves[0].points[0]) + ")"
+  viewer.start(result.players, result.guides)
+})
+
+$(function() {
+  $('#step').click(function() {
+    viewer.step()
   })
 
-  players.append('circle')
-    .attr("r", 10)
+  $('#reset').click(function() {
+    viewer.reset()
+  })
 
-  players.filter(positionIs('jammer'))
-    .append('polygon')
-    .attr("points", '8.5,0, 3.6405764746872635,2.6450336353161292, 2.6266444521870533,8.083980388508804, -1.390576474687263,4.279754323328191, -6.876644452187053,4.996174644486023, -4.5,5.51091059616309e-16, -6.876644452187053,-4.996174644486021, -1.390576474687264,-4.2797543233281905, 2.6266444521870516,-8.083980388508806, 3.6405764746872626,-2.64503363531613')
+  $('#shouldFocus').change(function() {
+    viewer.shouldFocus(!viewer.shouldFocus())
+  })
+})
 
-  players.filter(positionIs('pivot'))
-    .append('rect')
-    .attr('width', 18)
-    .attr('height', 5)
-    .attr('x', -9)
-    .attr('y', -2.5)
-    .attr('rx', 2)
-
-  return players
-}
-
-function createGuides(guides) {
-  var guideGraphics = d3.select('body').selectAll('.guide')
-    .data(guides)
-    .enter()
-      .insert('div', 'svg')
-      .attr('class', 'guide')
-      .style('display', 'none')
-
-  guideGraphics
-    .append('h1')
-    .text(function(d) { return d.heading })
-
-  guideGraphics
-    .append('div')
-    .html(function(d) { return d.text })
-}
-
-function toScreenX(x) {
-  return (x * (width / 26)) + 140
-}
-
-function toScreenY(y) {
-  return (y * height / 17) + 50
-}
-
-function toScreen(xy) {
-  return [toScreenX(xy[0]), toScreenY(xy[1])]
-}
-
-function playerFromRelativeToScreenCoordinates(relative) {
-  var absolute = relative
-  absolute.placement = toScreen(relative.placement)
-  absolute.moves = relative.moves.map(function(move) {
-    if (!move) {
-      return null
+},{"./parse":2,"./viewer":7}],2:[function(require,module,exports){
+// Array.find polyfil
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.find called on null or undefined');
     }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate must be a function');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
 
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+
+function parseTeams(json) {
+  return (json.teams || []).map(function(team) {
     return {
-      duration: move.duration,
-      points: move.points.map(toScreen),
+      id: team.id
     }
   })
-  return absolute
 }
 
-var json = {
-  "teams": [{
-    "id": "1"
-  }, {
-    "id": "2"
-  }],
+function parseCoordinate(json) {
+  return [json.x, json.y]
+}
 
-  "players": [{
-    "id": "1",
-    "team": "1",
-    "placement": { "x": 10, "y": 1.25 },
-    "properties": {
-      "position": "jammer"
-    }
-  }, {
-    "id": "2",
-    "team": "1",
-    "placement": { "x": 5.75, "y": 1.25 },
-    "properties": {
-      "position": "pivot"
-    }
-  }, {
-    "id": "3",
-    "team": "1",
-    "placement": { "x": 6.5, "y": 0.5 }
-  }, {
-    "id": "4",
-    "team": "1",
-    "placement": { "x": 7.25, "y": 1.25 }
-  }, {
-    "id": "5",
-    "team": "1",
-    "placement": { "x": 6.5, "y": 2 }
-  }, {
-    "id": "6",
-    "team": "2",
-    "placement": { "x": 10, "y": 2.2 },
-    "properties": {
-      "position": "jammer"
-    }
-  }, {
-    "id": "7",
-    "team": "2",
-    "placement": { "x": 5.75, "y": 2.45 },
-    "properties": {
-      "position": "pivot"
-    }
-  }, {
-    "id": "8",
-    "team": "2",
-    "placement": { "x": 6.5, "y": 1.25 }
-  }, {
-    "id": "9",
-    "team": "2",
-    "placement": { "x": 7.25, "y": 2.45 }
-  }, {
-    "id": "10",
-    "team": "2",
-    "placement": { "x": 6.5, "y": 3 }
-  }],
-
-  "play": {
-    "guide": {
-      "heading": "Before",
-      "text": "<h2 class=\"team-1\">Team 1</h2><p>Do something</p><h2 class=\"team-2\">Team 2</h2><p>Do something else</p>"
-    },
-    "moves": [{
-      "guide": {
-        "heading": "Step 1",
-        "text": "WTF"
-      },
-      "players": {
-        "1":  { "duration": 1,    "steps": [{ "x": 10, "y": 1.25 }, { "x": 7.55, "y": 1.25 }] },
-        "2":  { "duration": 0.5,  "steps": [{ "x": 5.75, "y": 1.25 }, { "x": 5.75, "y": 1.75 }] },
-        "3":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 0.5 }, { "x": 7.15, "y": 1.1 }] },
-        "4":  { "duration": 0.25, "steps": [{ "x": 7.25, "y": 1.25 }, { "x": 6.5, "y": 1.25 }] },
-        "6":  { "duration": 1,    "steps": [{ "x": 10, "y": 2.2 }, { "x": 7, "y": 1.75 }] },
-        "8":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 1.25 }, { "x": 5.75, "y": -0.25 }] },
-        "9":  { "duration": 0.5,  "steps": [{ "x": 7.25, "y": 2.45 }, { "x": 7, "y": 2.45 }] },
-        "10": { "duration": 0.75, "steps": [{ "x": 6.5, "y": 3 }, { "x": 6.5, "y": 2.7 }] }
-      }
-    }, {
-      "guide": {
-        "heading": "Step 2",
-        "text": "CTF"
-      },
-      "players": {
-        "1": { "duration": 1, "steps": [{ "x": 7.55, "y": 1.25 }, { "x": 7.75, "y": 0.75 }, { "x": 7, "y": 0.5 }, { "x": 4.5, "y": 1.5 }] },
-        "8": { "duration": 1, "steps": [{ "x": 5.75, "y": -0.25 }, { "x": 7.25, "y": -0.25 }, { "x": 7, "y": 0.4 }] }
-      }
-    }]
+function parseMove(json) {
+  return {
+    duration: json.duration,
+    points: json.steps.map(parseCoordinate)
   }
 }
 
-var result = Parse(json)
-
-var players = result.players.map(playerFromRelativeToScreenCoordinates)
-var guides = result.guides
-
-var zb = d3.behavior.zoom()
-  .scaleExtent([1, 8])
-  .size([width, height])
-  .on("zoom", zoom)
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-      .call(zb)
-    .append("g");
-
-function zoomTo(pos, scale) {
-  svg.attr("transform", "translate(" + pos + "), scale(" + scale + ")");
-  zb.translate(pos)
-  zb.scale(scale)
-}
-
-var aspectRatio = width / height
-function zoomToRect(rect) {
-  var targetHeight = rect.width / aspectRatio
-
-  if (rect.height < targetHeight) {
-    // make sure the height fits the aspect ratio
-    var delta = targetHeight - rect.height
-    rect = growRect(rect, 0, delta)
-  } else {
-    // make sure the width fits the aspect ratio
-    var targetWidth = rect.height * aspectRatio
-    var delta = targetWidth - rect.width
-    rect = growRect(rect, delta, 0)
+function parsePlayer(json, movesJson, teams) {
+  var player = {
+    id: json.id,
+    team: json.team
   }
 
-  var scale = width / rect.width
-  zoomTo([-rect.x * scale, -rect.y * scale], scale)
+  var maxSteps = Object.keys(movesJson).map(function(id) {
+      return (movesJson[id].steps || []).length
+    }).reduce(function(a, b) {
+      return a + b
+    })
+
+  player.moves = (movesJson || []).map(function(move) {
+    return move.players && move.players[player.id] ? parseMove(move.players[player.id]) : null
+  })
+
+  if (json.placement) {
+    player.placement = parseCoordinate(json.placement)
+  }
+
+  if (json.properties && json.properties.position) {
+    player.position = json.properties.position
+  }
+
+  return player
 }
 
-var shouldFocus = true
-function zoom() {
-  zoomTo(d3.event.translate, d3.event.scale)
-  shouldFocus = false
+function parsePlayers(json, teams) {
+  var movesJson = json.play && json.play.moves ? json.play.moves : {}
+
+  return (json.players || []).map(function(player) {
+    return parsePlayer(player, movesJson, teams)
+  })
 }
 
-var trackOutside = svg.append('path')
-  .attr('class', 'track')
-  .attr('d', 'M80.8,6.1 l106.7,-6.1 a8.08,8.08 0 0,1 0,161.5 l-106.7,6.1 a8.08,8.08 0 0,1 0,-161.5z m0,39.6 a3.81,3.81 0 0,0 0,76.2 l106.7,0 a3.81,3.81 0 0,0 0,-76.2z')
-  .attr('transform', 'translate(120, 40), scale(2.5)')
+function parseGuides(json) {
+  if (!json.play) {
+    return []
+  }
 
-var line = d3.svg.line()
-  .tension(0.75)
-  .interpolate('cardinal')
+  var play = json.play
+  var guides = (play.moves || []).map(function(move) {
+    return move.guide ? move.guide : null
+  })
+
+  guides.splice(0, 0, play.guide ? play.guide : null)
+
+  return guides
+}
+
+function Parse(json) {
+  var teams = parseTeams(json)
+  var players = parsePlayers(json, teams)
+  var guides = parseGuides(json)
+
+  return {
+    guides: guides,
+    players: players,
+    teams: teams,
+    title: (json.play || {}).title
+  }
+}
+
+module.exports = Parse
+
+},{}],3:[function(require,module,exports){
+var Geometry = require('./geometry')
 
 function getScreenCoords(el) {
   var cx = el.getAttribute('cx'),
@@ -250,6 +154,91 @@ function getScreenCoords(el) {
   }
 }
 
+function zoomTo(svg, zb, pos, scale) {
+  svg.attr("transform", "translate(" + pos + "), scale(" + scale + ")");
+  zb.translate(pos)
+  zb.scale(scale)
+}
+
+function minimalBoundingRect(query) {
+  return d3.selectAll(query)[0]
+    .map(getScreenCoords)
+    .reduce(Geometry.unionRect)
+}
+
+function focusOnActivity(target, zb, screen) {
+  var rect = minimalBoundingRect('.player')
+  zoomToRect(target, zb, Geometry.scaleRect(rect, 2), screen)
+}
+
+function zoomToRect(target, zb, rect, screen) {
+  var targetHeight = rect.width / screen.aspectRatio
+
+  if (rect.height < targetHeight) {
+    // make sure the height fits the aspect ratio
+    var delta = targetHeight - rect.height
+    rect = Geometry.growRect(rect, 0, delta)
+  } else {
+    // make sure the width fits the aspect ratio
+    var targetWidth = rect.height * screen.aspectRatio
+    var delta = targetWidth - rect.width
+    rect = Geometry.growRect(rect, delta, 0)
+  }
+
+  var scale = screen.width / rect.width
+  zoomTo(target, zb, [-rect.x * scale, -rect.y * scale], scale)
+}
+
+module.exports = function(width, height) {
+  var shouldFocus = true
+  var screen = {
+    width: width,
+    height: height,
+    aspectRatio: width / height
+  }
+  var target = d3.select('body svg g')
+  var zb = d3.behavior.zoom()
+    .scaleExtent([1, 8])
+    .size([width, height])
+    .on("zoom", function() {
+      zoomTo(target, zb, d3.event.translate, d3.event.scale)
+      shouldFocus = false
+    })
+  var svg = d3.select('body svg').call(zb)
+
+  return {
+    shouldFocus: function(v) {
+      if (typeof v !== 'undefined') {
+        shouldFocus = v
+      }
+
+      return shouldFocus
+    },
+
+    focusOnActivity: function() {
+      focusOnActivity(target, zb, screen)
+    }
+  }
+}
+
+},{"./geometry":5}],4:[function(require,module,exports){
+module.exports = function(width, height) {
+  function toScreenX(x) {
+    return (x * (width / 26)) + 140
+  }
+
+  function toScreenY(y) {
+    return (y * height / 17) + 50
+  }
+
+  return {
+    toScreen: function(xy) {
+      return [toScreenX(xy[0]), toScreenY(xy[1])]
+    }
+  }
+}
+
+},{}],5:[function(require,module,exports){
 function unionRect(a, b) {
   var x1 = Math.min(a.x, b.x),
     y1 = Math.min(a.y, b.y)
@@ -260,12 +249,6 @@ function unionRect(a, b) {
     width: Math.max(a.x + a.width, b.x + b.width) - x1,
     height: Math.max(a.y + a.height, b.y + b.height) - y1,
   }
-}
-
-function minimalBoundingRect(query) {
-  return svg.selectAll(query)[0]
-    .map(getScreenCoords)
-    .reduce(unionRect)
 }
 
 function growRect(rect, wd, hd) {
@@ -297,28 +280,115 @@ function scaleRect(rect, scaleX, scaleY) {
   }
 }
 
-function focusOnActivity() {
-  var rect = minimalBoundingRect('.player')
-  zoomToRect(scaleRect(rect, 2))
+module.exports = {
+  unionRect: unionRect,
+  growRect: growRect,
+  scaleRect: scaleRect,
 }
 
-createPlayerGraphics(players)
-createGuides(guides)
+},{}],6:[function(require,module,exports){
+module.exports = {
+  create: function(guides) {
+    var guideGraphics = d3.select('body').selectAll('.guide')
+      .data(guides)
+      .enter()
+        .insert('div', 'svg')
+        .attr('class', 'guide')
+        .style('display', 'none')
+
+    guideGraphics
+      .append('h1')
+      .text(function(d) { return d.heading })
+
+    guideGraphics
+      .append('div')
+      .html(function(d) { return d.text })
+  },
+
+  update: function(step) {
+    d3.selectAll('.guide')
+      .style('display', function(d, idx) {
+        return idx == step ? '' : 'none'
+      })
+  }
+}
+
+},{}],7:[function(require,module,exports){
+var width = 960,
+  height = 500
+
+var coordinateSystem = require('./coordinate-system')(width, height),
+  Camera = require('./camera'),
+  Geometry = require('./geometry'),
+  Guides = require('./guides'),
+  Shapes = require('./shapes')
+
+function positionIs(pos) {
+  return function(player) {
+    return player.position == pos
+  }
+}
+
+function createPlayerGraphics(svg, players) {
+  var players = svg.selectAll('g.player')
+    .data(players, function(d) { return d.id })
+
+  players
+    .enter()
+      .append('g')
+      .attr('class', function(d) {
+        return 'player team-' + d.team
+      })
+  
+  players.attr("transform", function(d) {
+    return "translate(" + (d.placement || d.moves[0].points[0]) + ")"
+  })
+
+  players.append('circle')
+    .attr("r", 10)
+
+  players.filter(positionIs('jammer'))
+    .append('polygon')
+    .attr("points", Shapes.star)
+
+  players.filter(positionIs('pivot'))
+    .append('rect')
+    .attr('width', 18)
+    .attr('height', 5)
+    .attr('x', -9)
+    .attr('y', -2.5)
+    .attr('rx', 2)
+
+  return players
+}
+
+function playerFromRelativeToScreenCoordinates(relative) {
+  var absolute = relative
+  absolute.placement = coordinateSystem.toScreen(relative.placement)
+  absolute.moves = relative.moves.map(function(move) {
+    if (!move) {
+      return null
+    }
+
+    return {
+      duration: move.duration,
+      points: move.points.map(coordinateSystem.toScreen),
+    }
+  })
+  return absolute
+}
+
+var line = d3.svg.line()
+  .tension(0.75)
+  .interpolate('cardinal')
 
 var activeSegment = 0
-
-function updateGuide(step) {
-  d3.selectAll('.guide')
-    .style('display', function(d, idx) {
-      return idx == step ? '' : 'none'
-    })
-}
 
 function getTotalLength() {
   return this.getTotalLength()
 }
 
-function step() {
+function step(svg, camera, players) {
   var playersWithMoves = players.filter(function(d) {
     return !!d.moves[activeSegment]
   })
@@ -327,7 +397,7 @@ function step() {
     return
   }
 
-  updateGuide(activeSegment + 1)
+  Guides.update(activeSegment + 1)
 
   var nextMovesPaths = svg.selectAll('.path')
     .data(playersWithMoves, function(d) { return d.id })
@@ -369,12 +439,18 @@ function step() {
       .attrTween('transform', function(d, idx) {
         var path = nextMovesPaths[0][idx]
         var l = path.getTotalLength();
-        return function (t) {
-          if (shouldFocus) {
-            focusOnActivity()
+        var prevTime = 0
+        return function(time) {
+          if (camera.shouldFocus()) {
+            camera.focusOnActivity()
           }
-          var p = path.getPointAtLength(t * l);
-          return "translate(" + p.x + "," + p.y + ")";
+          
+          var prevPos = path.getPointAtLength(prevTime * l)
+          var pos = path.getPointAtLength(time * l);
+          var angle = Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
+          prevTime = time
+
+          return 'translate('+pos.x+','+pos.y+')rotate('+angle+')'
         }
       })
       .each(function() { ++n; }) 
@@ -387,17 +463,59 @@ function step() {
       })
 }
 
-function reset() {
+function reset(svg, camera, players) {
   activeSegment = 0
 
-  createPlayerGraphics(players)
+  createPlayerGraphics(svg, players)
 
   svg.selectAll('.path')
     .data([]).exit().remove()
 
-  updateGuide(0)
-  focusOnActivity()
+  Guides.update(0)
+  shouldFocus = true
+  camera.focusOnActivity()
 }
 
-updateGuide(0)
-focusOnActivity()
+module.exports = function() {
+  var players = [],
+    guides = []
+
+  var board = d3.select('svg')
+    .attr('preserveAspectRatio', 'xMinYMin meet')
+    .attr('viewBox', '0 0 '+width+' '+height)
+    .attr('class', 'svg-content-responsive')
+    .append('g');
+
+  var camera = Camera(width, height, board)
+
+  var trackOutside = board.append('path')
+    .attr('class', 'track')
+    .attr('d', Shapes.track)
+    .attr('transform', 'translate(120, 40), scale(2.5)')
+
+  return {
+    start: function(p, g) {
+      players = p.map(playerFromRelativeToScreenCoordinates), guides = g
+      Guides.create(guides)
+      reset(board, camera, players)
+    },
+
+    step: function() {
+      step(board, camera, players)
+    },
+
+    reset: function() {
+      reset(board, camera, players)
+    },
+
+    shouldFocus: camera.shouldFocus
+  }
+}
+
+},{"./camera":3,"./coordinate-system":4,"./geometry":5,"./guides":6,"./shapes":8}],8:[function(require,module,exports){
+module.exports = {
+  star: '8.5,0, 3.6405764746872635,2.6450336353161292, 2.6266444521870533,8.083980388508804, -1.390576474687263,4.279754323328191, -6.876644452187053,4.996174644486023, -4.5,5.51091059616309e-16, -6.876644452187053,-4.996174644486021, -1.390576474687264,-4.2797543233281905, 2.6266444521870516,-8.083980388508806, 3.6405764746872626,-2.64503363531613',
+  track: 'M80.8,6.1 l106.7,-6.1 a8.08,8.08 0 0,1 0,161.5 l-106.7,6.1 a8.08,8.08 0 0,1 0,-161.5z m0,39.6 a3.81,3.81 0 0,0 0,76.2 l106.7,0 a3.81,3.81 0 0,0 0,-76.2z'
+}
+
+},{}]},{},[1]);

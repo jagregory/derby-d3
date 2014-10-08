@@ -1,5 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Helvetica Neue', Arial;
+  margin: 0;
+}
+
+header {
+  background: #005FA5;
+  padding: 10px;
+  color: #fff;
+}
+
+header h1 {
+  display: inline-block;
+  margin: 0 30px 0 0;
+  font-weight: 300;
+  font-size: 25px;
+}
+
+header button {
+  background: #fff;
+  border: 0;
+  padding: 5px 20px;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 path {
@@ -32,8 +58,8 @@ path.path {
 }
 
 .guide {
-  float: right;
-  width: 30%;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .guide h1 {
@@ -50,4 +76,27 @@ path.path {
 
 .guide h2.team-2 {
   border-color: #F00097;
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    margin-top: 60px;
+  }
+
+  header {
+    position: fixed;
+    margin-top: -60px;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  svg {
+    width: 70%;
+  }
+
+  .guide {
+    float: right;
+    width: 30%;
+  }
 }
