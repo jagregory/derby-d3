@@ -4,7 +4,7 @@ var Parse = require('./parse'),
 
 var viewer = Viewer()
 
-$.get('/example.json', function(json) {
+$.get('example.json', function(json) {
   var result = Parse(json)
 
   $('#title').text(result.title)
