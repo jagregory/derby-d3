@@ -48,6 +48,11 @@ path.path {
   fill: #fff;
 }
 
+.player .outline {
+  fill: transparent;
+  stroke-width: 2px;
+}
+
 .track {
   stroke: #555;
   stroke-width: 2;

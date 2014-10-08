@@ -3,6 +3,8 @@
     "id": "1"
   }, {
     "id": "2"
+  }, {
+    "id": "zebra"
   }],
 
   "players": [{
@@ -57,6 +59,13 @@
     "id": "10",
     "team": "2",
     "placement": { "x": 6.5, "y": 3 }
+  }, {
+    "id": "11",
+    "team": "zebra",
+    "placement": { "x": 2, "y": 2 },
+    "properties": {
+      "position": "referee"
+    }
   }],
 
   "play": {

@@ -43,6 +43,31 @@ function createPlayerGraphics(svg, players) {
     .attr('y', -2.5)
     .attr('rx', 2)
 
+  var refs = players.filter(positionIs('referee'))
+    .attr('clip-path', 'url(#playerClip)')
+
+  refs.append('rect')
+    .attr('width', 3)
+    .attr('height', 20)
+    .attr('x', -7.5)
+    .attr('y', -10)
+  
+  refs.append('rect')
+    .attr('width', 3)
+    .attr('height', 20)
+    .attr('x', -1.5)
+    .attr('y', -10)
+
+  refs.append('rect')
+    .attr('width', 3)
+    .attr('height', 20)
+    .attr('x', 4.5)
+    .attr('y', -10)
+
+  refs.append('circle')
+    .attr('class', 'outline')
+    .attr('r', 10)
+
   return players
 }
 
@@ -163,6 +188,12 @@ function reset(svg, camera, players) {
 module.exports = function() {
   var players = [],
     guides = []
+
+  d3.select('svg').append('defs')
+    .append('clipPath')
+    .attr('id', 'playerClip')
+    .append('circle')
+    .attr('r', 10)
 
   var board = d3.select('svg')
     .attr('preserveAspectRatio', 'xMinYMin meet')
