@@ -145,12 +145,18 @@ function step(svg, camera, players) {
       .attrTween('transform', function(d, idx) {
         var path = nextMovesPaths[0][idx]
         var l = path.getTotalLength();
-        return function (t) {
+        var prevTime = 0
+        return function(time) {
           if (camera.shouldFocus()) {
             camera.focusOnActivity()
           }
-          var p = path.getPointAtLength(t * l);
-          return "translate(" + p.x + "," + p.y + ")";
+          
+          var prevPos = path.getPointAtLength(prevTime * l)
+          var pos = path.getPointAtLength(time * l);
+          var angle = Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
+          prevTime = time
+
+          return 'translate('+pos.x+','+pos.y+')rotate('+angle+')'
         }
       })
       .each(function() { ++n; }) 
