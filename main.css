@@ -41,15 +41,16 @@ path.path {
 }
 
 .player {
-  fill: #005FA5;
-}
-
-.player.team-2 {
-  fill: #F00097;
+  fill: #000;
 }
 
 .player polygon, .player rect {
-  fill: white;
+  fill: #fff;
+}
+
+.player .outline {
+  fill: transparent;
+  stroke-width: 2px;
 }
 
 .track {
@@ -68,14 +69,6 @@ path.path {
 
 .guide h2 {
   border-bottom: 2px solid #eee;
-}
-
-.guide h2.team-1 {
-  border-color: #005FA5;
-}
-
-.guide h2.team-2 {
-  border-color: #F00097;
 }
 
 @media screen and (max-width: 600px) {
