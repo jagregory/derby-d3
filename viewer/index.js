@@ -180,10 +180,11 @@ module.exports = function() {
   var players = [],
     guides = []
 
-  var board = d3.select("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g");
+  var board = d3.select('svg')
+    .attr('preserveAspectRatio', 'xMinYMin meet')
+    .attr('viewBox', '0 0 '+width+' '+height)
+    .attr('class', 'svg-content-responsive')
+    .append('g');
 
   var camera = Camera(width, height, board)
 

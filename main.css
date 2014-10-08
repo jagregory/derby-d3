@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Helvetica Neue', Arial;
   margin: 0;
@@ -47,8 +51,8 @@ path.path {
 }
 
 .guide {
-  float: right;
-  width: 30%;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .guide h1 {
@@ -65,4 +69,27 @@ path.path {
 
 .guide h2.team-2 {
   border-color: #F00097;
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    margin-top: 60px;
+  }
+
+  header {
+    position: fixed;
+    margin-top: -60px;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  svg {
+    width: 70%;
+  }
+
+  .guide {
+    float: right;
+    width: 30%;
+  }
 }
