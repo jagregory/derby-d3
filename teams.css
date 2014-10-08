@@ -1,0 +1,15 @@
+.player.team-1 {
+  fill: #005FA5;
+}
+
+.player.team-2 {
+  fill: #F00097;
+}
+
+.guide h2.team-1 {
+  border-color: #005FA5;
+}
+
+.guide h2.team-2 {
+  border-color: #F00097;
+}

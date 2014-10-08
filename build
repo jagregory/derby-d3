@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-if [ ! -d dist ]; then mkdir dist; fi
+if [ -d dist ]; then rm -r dist; fi
+mkdir dist
 
-cp index.html main.css example.json jquery-2.1.1.min.js d3.v3.min.js dist/
+cp index.html *.css jquery-2.1.1.min.js d3.v3.min.js dist/
+cp -R plays/ dist/plays
 browserify derby.js -o dist/derby.js
