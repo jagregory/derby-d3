@@ -3,7 +3,8 @@ var width = 960,
 
 var coordinateSystem = require('./coordinate-system')(width, height),
   Geometry = require('./geometry'),
-  Camera = require('./camera')
+  Camera = require('./camera'),
+  Guides = require('./guides')
 
 function positionIs(pos) {
   return function(player) {
@@ -44,23 +45,6 @@ function createPlayerGraphics(svg, players) {
   return players
 }
 
-function createGuides(guides) {
-  var guideGraphics = d3.select('body').selectAll('.guide')
-    .data(guides)
-    .enter()
-      .insert('div', 'svg')
-      .attr('class', 'guide')
-      .style('display', 'none')
-
-  guideGraphics
-    .append('h1')
-    .text(function(d) { return d.heading })
-
-  guideGraphics
-    .append('div')
-    .html(function(d) { return d.text })
-}
-
 function playerFromRelativeToScreenCoordinates(relative) {
   var absolute = relative
   absolute.placement = coordinateSystem.toScreen(relative.placement)
@@ -83,13 +67,6 @@ var line = d3.svg.line()
 
 var activeSegment = 0
 
-function updateGuide(step) {
-  d3.selectAll('.guide')
-    .style('display', function(d, idx) {
-      return idx == step ? '' : 'none'
-    })
-}
-
 function getTotalLength() {
   return this.getTotalLength()
 }
@@ -103,7 +80,7 @@ function step(svg, camera, players) {
     return
   }
 
-  updateGuide(activeSegment + 1)
+  Guides.update(activeSegment + 1)
 
   var nextMovesPaths = svg.selectAll('.path')
     .data(playersWithMoves, function(d) { return d.id })
@@ -177,7 +154,7 @@ function reset(svg, camera, players) {
   svg.selectAll('.path')
     .data([]).exit().remove()
 
-  updateGuide(0)
+  Guides.update(0)
   shouldFocus = true
   camera.focusOnActivity()
 }
@@ -202,7 +179,7 @@ module.exports = function() {
   return {
     start: function(p, g) {
       players = p.map(playerFromRelativeToScreenCoordinates), guides = g
-      createGuides(guides)
+      Guides.create(guides)
       reset(board, camera, players)
     },
 
