@@ -1,0 +1,94 @@
+{
+  "teams": [{
+    "id": "1"
+  }, {
+    "id": "2"
+  }],
+
+  "players": [{
+    "id": "1",
+    "team": "1",
+    "placement": { "x": 10, "y": 1.25 },
+    "properties": {
+      "position": "jammer"
+    }
+  }, {
+    "id": "2",
+    "team": "1",
+    "placement": { "x": 5.75, "y": 1.25 },
+    "properties": {
+      "position": "pivot"
+    }
+  }, {
+    "id": "3",
+    "team": "1",
+    "placement": { "x": 6.5, "y": 0.5 }
+  }, {
+    "id": "4",
+    "team": "1",
+    "placement": { "x": 7.25, "y": 1.25 }
+  }, {
+    "id": "5",
+    "team": "1",
+    "placement": { "x": 6.5, "y": 2 }
+  }, {
+    "id": "6",
+    "team": "2",
+    "placement": { "x": 10, "y": 2.2 },
+    "properties": {
+      "position": "jammer"
+    }
+  }, {
+    "id": "7",
+    "team": "2",
+    "placement": { "x": 5.75, "y": 2.45 },
+    "properties": {
+      "position": "pivot"
+    }
+  }, {
+    "id": "8",
+    "team": "2",
+    "placement": { "x": 6.5, "y": 1.25 }
+  }, {
+    "id": "9",
+    "team": "2",
+    "placement": { "x": 7.25, "y": 2.45 }
+  }, {
+    "id": "10",
+    "team": "2",
+    "placement": { "x": 6.5, "y": 3 }
+  }],
+
+  "play": {
+    "title": "Example 2",
+    "guide": {
+      "heading": "Before",
+      "text": "<h2 class=\"team-1\">Team 1</h2><p>Do something</p><h2 class=\"team-2\">Team 2</h2><p>Do something else</p>"
+    },
+    "moves": [{
+      "guide": {
+        "heading": "Step 1",
+        "text": "WTF"
+      },
+      "players": {
+        "1":  { "duration": 1,    "steps": [{ "x": 10, "y": 1.25 }, { "x": 7.55, "y": 1.25 }] },
+        "2":  { "duration": 0.5,  "steps": [{ "x": 5.75, "y": 1.25 }, { "x": 5.75, "y": 1.75 }] },
+        "3":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 0.5 }, { "x": 7.15, "y": 1.1 }] },
+        "4":  { "duration": 0.25, "steps": [{ "x": 7.25, "y": 1.25 }, { "x": 6.5, "y": 1.25 }] },
+        "6":  { "duration": 1,    "steps": [{ "x": 10, "y": 2.2 }, { "x": 7, "y": 1.75 }] },
+        "8":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 1.25 }, { "x": 5.75, "y": -0.25 }] },
+        "9":  { "duration": 0.5,  "steps": [{ "x": 7.25, "y": 2.45 }, { "x": 7, "y": 2.45 }] },
+        "10": { "duration": 0.75, "steps": [{ "x": 6.5, "y": 3 }, { "x": 6.5, "y": 2.7 }] }
+      }
+    }, {
+      "guide": {
+        "heading": "Step 2",
+        "text": "CTF"
+      },
+      "players": {
+        "1": { "duration": 1, "steps": [{ "x": 7.55, "y": 1.25 }, { "x": 7.75, "y": 0.75 }, { "x": 7, "y": 0.5 }, { "x": 4.5, "y": 1.5 }] },
+        "8": { "duration": 1, "steps": [{ "x": 5.75, "y": -0.25 }, { "x": 7.25, "y": -0.25 }, { "x": 7, "y": 0.4 }] }
+      }
+    }]
+  }
+}

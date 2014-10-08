@@ -1,9 +1,16 @@
 var Parse = require('./parse'),
-  Viewer = require('./viewer')
+  Viewer = require('./viewer'),
+  Url = require('url')
 
 var viewer = Viewer()
+var url = Url.parse(window.location.href)
+var playUrl = 'plays/example.json'
 
-$.get('example.json', function(json) {
+if (url.hash) {
+  playUrl = url.hash.substring(1) + '.json'
+}
+
+$.get(playUrl, function(json) {
   var result = Parse(json)
 
   $('#title').text(result.title)
