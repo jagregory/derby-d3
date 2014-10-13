@@ -31,13 +31,13 @@ function parseTeams(json) {
 }
 
 function parseCoordinate(json) {
-  return [json.x, json.y]
+  return [json[0], json[1]]
 }
 
 function parseMove(json) {
   return {
     duration: json.duration,
-    points: json.steps.map(parseCoordinate)
+    points: json.steps
   }
 }
 

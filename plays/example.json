@@ -8,55 +8,55 @@
   "players": [{
     "id": "1",
     "team": "1",
-    "placement": { "x": 10, "y": 1.25 },
+    "placement": [10, 1.25],
     "properties": {
       "position": "jammer"
     }
   }, {
     "id": "2",
     "team": "1",
-    "placement": { "x": 5.75, "y": 1.25 },
+    "placement": [5.75, 1.25],
     "properties": {
       "position": "pivot"
     }
   }, {
     "id": "3",
     "team": "1",
-    "placement": { "x": 6.5, "y": 0.5 }
+    "placement": [6.5, 0.5]
   }, {
     "id": "4",
     "team": "1",
-    "placement": { "x": 7.25, "y": 1.25 }
+    "placement": [7.25, 1.25]
   }, {
     "id": "5",
     "team": "1",
-    "placement": { "x": 6.5, "y": 2 }
+    "placement": [6.5, 2]
   }, {
     "id": "6",
     "team": "2",
-    "placement": { "x": 10, "y": 2.2 },
+    "placement": [10, 2.2],
     "properties": {
       "position": "jammer"
     }
   }, {
     "id": "7",
     "team": "2",
-    "placement": { "x": 5.75, "y": 2.45 },
+    "placement": [5.75, 2.45],
     "properties": {
       "position": "pivot"
     }
   }, {
     "id": "8",
     "team": "2",
-    "placement": { "x": 6.5, "y": 1.25 }
+    "placement": [6.5, 1.25]
   }, {
     "id": "9",
     "team": "2",
-    "placement": { "x": 7.25, "y": 2.45 }
+    "placement": [7.25, 2.45]
   }, {
     "id": "10",
     "team": "2",
-    "placement": { "x": 6.5, "y": 3 }
+    "placement": [6.5, 3]
   }],
 
   "play": {
@@ -71,14 +71,14 @@
         "text": "WTF"
       },
       "players": {
-        "1":  { "duration": 1,    "steps": [{ "x": 10, "y": 1.25 }, { "x": 7.55, "y": 1.25 }] },
-        "2":  { "duration": 0.5,  "steps": [{ "x": 5.75, "y": 1.25 }, { "x": 5.75, "y": 1.75 }] },
-        "3":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 0.5 }, { "x": 7.15, "y": 1.1 }] },
-        "4":  { "duration": 0.25, "steps": [{ "x": 7.25, "y": 1.25 }, { "x": 6.5, "y": 1.25 }] },
-        "6":  { "duration": 1,    "steps": [{ "x": 10, "y": 2.2 }, { "x": 7, "y": 1.75 }] },
-        "8":  { "duration": 0.5,  "steps": [{ "x": 6.5, "y": 1.25 }, { "x": 5.75, "y": -0.25 }] },
-        "9":  { "duration": 0.5,  "steps": [{ "x": 7.25, "y": 2.45 }, { "x": 7, "y": 2.45 }] },
-        "10": { "duration": 0.75, "steps": [{ "x": 6.5, "y": 3 }, { "x": 6.5, "y": 2.7 }] }
+        "1":  { "duration": 1,    "steps": [[10, 1.25], [7.55, 1.25]] },
+        "2":  { "duration": 0.5,  "steps": [[5.75, 1.25], [5.75, 1.75]] },
+        "3":  { "duration": 0.5,  "steps": [[6.5, 0.5], [7.15, 1.1]] },
+        "4":  { "duration": 0.25, "steps": [[7.25, 1.25], [6.5, 1.25]] },
+        "6":  { "duration": 1,    "steps": [[10, 2.2], [7, 1.75]] },
+        "8":  { "duration": 0.5,  "steps": [[6.5, 1.25], [5.75, -0.25]] },
+        "9":  { "duration": 0.5,  "steps": [[7.25, 2.45], [7, 2.45]] },
+        "10": { "duration": 0.75, "steps": [[6.5, 3], [6.5, 2.7]] }
       }
     }, {
       "guide": {
@@ -86,8 +86,8 @@
         "text": "CTF"
       },
       "players": {
-        "1": { "duration": 1, "steps": [{ "x": 7.55, "y": 1.25 }, { "x": 7.75, "y": 0.75 }, { "x": 7, "y": 0.5 }, { "x": 4.5, "y": 1.5 }] },
-        "8": { "duration": 1, "steps": [{ "x": 5.75, "y": -0.25 }, { "x": 7.25, "y": -0.25 }, { "x": 7, "y": 0.4 }] }
+        "1": { "duration": 1, "steps": [[7.55, 1.25], [7.75, 0.75], [7, 0.5], [4.5, 1.5]] },
+        "8": { "duration": 1, "steps": [[5.75, -0.25], [7.25, -0.25], [7, 0.4]] }
       }
     }]
   }
