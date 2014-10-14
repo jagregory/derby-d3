@@ -27,12 +27,12 @@ function createPlayerGraphics(svg, players) {
         return 'player-' + d.id
       })
   
-  players.attr("transform", function(d) {
-    return "translate(" + (d.placement || d.moves[0].points[0]) + ")"
+  players.attr('transform', function(d) {
+    return 'translate(' + d.placement + ')'
   })
 
   players.append('circle')
-    .attr("r", 10)
+    .attr('r', 10)
 
   players.filter(positionIs('jammer'))
     .append('polygon')
@@ -77,14 +77,14 @@ function createPlayerGraphics(svg, players) {
 function playerFromRelativeToScreenCoordinates(relative) {
   var absolute = relative
   absolute.placement = coordinateSystem.toScreen(relative.placement)
-  absolute.moves = relative.moves.map(function(move) {
-    if (!move) {
+  absolute.steps = relative.steps.map(function(step) {
+    if (!step) {
       return null
     }
 
     return {
-      duration: move.duration,
-      points: move.points.map(coordinateSystem.toScreen),
+      duration: step.duration,
+      points: step.points.map(coordinateSystem.toScreen),
     }
   })
   return absolute
@@ -94,45 +94,47 @@ var line = d3.svg.line()
   .tension(0.75)
   .interpolate('cardinal')
 
-var activeSegment = 0
+var activeStep = 0
 
 function getTotalLength() {
   return this.getTotalLength()
 }
 
 function step(svg, camera, players) {
-  var playersWithMoves = players.filter(function(d) {
-    return !!d.moves[activeSegment]
+  var playersInThisStep = players.filter(function(d) {
+    return !!d.steps[activeStep]
   })
 
-  if (playersWithMoves.length == 0) {
+  if (playersInThisStep.length == 0) {
     return
   }
 
-  Guides.update(activeSegment + 1)
+  Guides.update(activeStep + 1)
 
-  var nextMovesPaths = svg.selectAll('.path')
-    .data(playersWithMoves, function(d) { return d.id })
+  var pathsForThisStep = svg.selectAll('.path')
+    .data(playersInThisStep, function(d) { return d.id })
 
-  nextMovesPaths
+  pathsForThisStep
     .enter()
       .insert('path', '.player')
       .attr('class', 'path')
 
-  nextMovesPaths.attr('d', function(d) {
-    var move = d.moves[activeSegment]
-    return line(move.points)
+  pathsForThisStep.attr('d', function(d) {
+    var step = d.steps[activeStep]
+    return line(step.points)
   })
   .style('stroke-dasharray', getTotalLength)
   .style('stroke-dashoffset', getTotalLength)
   
-  nextMovesPaths.exit().remove()
+  pathsForThisStep.exit().remove()
 
-  nextMovesPaths.transition()
-    .duration(function(d) {
-      var move = d.moves[activeSegment]
-      return move ? move.duration * 1000 : 0
-    })
+  var durationFn = function(d) {
+    var step = d.steps[activeStep]
+    return step ? step.duration * 1000 : 0
+  }
+
+  pathsForThisStep.transition()
+    .duration(durationFn)
     .styleTween('stroke-dashoffset', function() {
       return d3.interpolateNumber(this.getTotalLength(), 0)
     })
@@ -142,14 +144,11 @@ function step(svg, camera, players) {
 
   var n = 0; 
   svg.selectAll('.player')
-    .data(playersWithMoves, function(d) { return d.id })
+    .data(playersInThisStep, function(d) { return d.id })
     .transition()
-      .duration(function(d) {
-        var move = d.moves[activeSegment]
-        return move ? move.duration * 1000 : 0
-      })
+      .duration(durationFn)
       .attrTween('transform', function(d, idx) {
-        var path = nextMovesPaths[0][idx]
+        var path = pathsForThisStep[0][idx]
         var l = path.getTotalLength();
         var prevTime = 0
         return function(time) {
@@ -168,7 +167,7 @@ function step(svg, camera, players) {
       .each(function() { ++n; }) 
       .each('end', function(d) {
         if (!--n) {
-          activeSegment++
+          activeStep++
           d3.selectAll('button')
             .attr('disabled', null)
         }
@@ -176,7 +175,7 @@ function step(svg, camera, players) {
 }
 
 function reset(svg, camera, players) {
-  activeSegment = 0
+  activeStep = 0
 
   createPlayerGraphics(svg, players)
 

@@ -47,13 +47,15 @@ function parsePlayer(json, movesJson, teams) {
     team: json.team
   }
 
-  player.moves = (movesJson || []).map(function(move) {
+  player.steps = (movesJson || []).map(function(move) {
     return move.players && move.players[player.id] ? parseMove(move.players[player.id][0]) : null
   })
 
-  if (json.placement) {
-    player.placement = parseCoordinate(json.placement)
+  if (!json.placement) {
+    throw 'Player ' + player.id + ' missing placement'
   }
+
+  player.placement = parseCoordinate(json.placement)
 
   if (json.properties && json.properties.position) {
     player.position = json.properties.position

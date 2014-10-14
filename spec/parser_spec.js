@@ -263,44 +263,44 @@ describe('parsing play json', function() {
       expect(result.players[0].placement).toEqual([10, 1.25])
     })
 
-    describe('moves', function() {
-      it('embeds moves', function() {
+    describe('steps', function() {
+      it('embeds steps', function() {
         var result = Parse(json)
 
-        expect(result.players[0].moves.length).toBe(3)
-        expect(result.players[0].moves[0]).toEqual({
+        expect(result.players[0].steps.length).toBe(3)
+        expect(result.players[0].steps[0]).toEqual({
           duration: 1,
           points: [[10, 1.25], [7.55, 1.25]]
         })
-        expect(result.players[0].moves[1]).toEqual({
+        expect(result.players[0].steps[1]).toEqual({
           duration: 1,
           points: [[7.55, 1.25], [7.75, 0.75], [7, 0.5], [4.5, 1.5]]
         })
-        expect(result.players[0].moves[2]).toBe(null)
+        expect(result.players[0].steps[2]).toBe(null)
       })
 
-      it('uses null to indicate skipping a move', function() {
+      it('uses null to indicate skipping a step', function() {
         var result = Parse(json)
 
-        expect(result.players[1].moves.length).toBe(3)
-        expect(result.players[1].moves[0]).toEqual({
+        expect(result.players[1].steps.length).toBe(3)
+        expect(result.players[1].steps[0]).toEqual({
           duration: 0.5,
           points: [[5.75, 1.25], [5.75, 1.75]]
         })
-        expect(result.players[1].moves[1]).toBe(null)
-        expect(result.players[1].moves[2]).toEqual({
+        expect(result.players[1].steps[1]).toBe(null)
+        expect(result.players[1].steps[2]).toEqual({
           duration: 1,
           points: [[5.75, 1.75], [7.75, 1.75]]
         })
       })
 
-      it('has no moves for a non-moving player', function() {
+      it('has no steps for an inactive player', function() {
         var result = Parse(json)
 
-        expect(result.players[4].moves.length).toBe(3)
-        expect(result.players[4].moves[0]).toBe(null)
-        expect(result.players[4].moves[1]).toBe(null)
-        expect(result.players[4].moves[2]).toBe(null)
+        expect(result.players[4].steps.length).toBe(3)
+        expect(result.players[4].steps[0]).toBe(null)
+        expect(result.players[4].steps[1]).toBe(null)
+        expect(result.players[4].steps[2]).toBe(null)
       })
     })
   })
