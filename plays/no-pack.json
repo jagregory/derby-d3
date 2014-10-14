@@ -80,15 +80,15 @@
         "text": "<p><span class='team-1'>Jammer</span> is held by their blockers and <span class='team-1'>blockers</span> trap the <span class='team-2'>other team</span>.</p>"
       },
       "players": {
-        "1":  { "duration": 0.75,    "steps": [[10, 1.25], [6.5, 1.25]] },
-        "2":  { "duration": 0.75,    "steps": [[5.75, 1.25], [6, 2.75], [6.5, 3]] },
-        "3":  { "duration": 0.75,    "steps": [[6.5, 0.5], [8, 0.5], [8, 1.5]] },
-        "4":  { "duration": 0.75, "steps": [[7.25, 1.25], [7.4, 1.7]] },
-        "5":  { "duration": 0.75, "steps": [[6.5, 2], [6.75, 2.25]] },
-        "6":  { "duration": 0.75, "steps": [[10, 2.2], [7.75, 2.2]] },
-        "7":  { "duration": 0.75,    "steps": [[5.75, 2.45], [6.25, 1.9]] },
-        "8":  { "duration": 1,    "steps": [[6.5, 1.25], [6, 1.1]] },
-        "10":  { "duration": 1, "steps": [[6.5, 3], [7.05, 3.1]] }
+        "1":  [{ "type": "move", "duration": 0.75, "to": [[10, 1.25], [6.5, 1.25]] }],
+        "2":  [{ "type": "move", "duration": 0.75, "to": [[5.75, 1.25], [6, 2.75], [6.5, 3]] }],
+        "3":  [{ "type": "move", "duration": 0.75, "to": [[6.5, 0.5], [8, 0.5], [8, 1.5]] }],
+        "4":  [{ "type": "move", "duration": 0.75, "to": [[7.25, 1.25], [7.4, 1.7]] }],
+        "5":  [{ "type": "move", "duration": 0.75, "to": [[6.5, 2], [6.75, 2.25]] }],
+        "6":  [{ "type": "move", "duration": 0.75, "to": [[10, 2.2], [7.75, 2.2]] }],
+        "7":  [{ "type": "move", "duration": 0.75, "to": [[5.75, 2.45], [6.25, 1.9]] }],
+        "8":  [{ "type": "move", "duration": 1,    "to": [[6.5, 1.25], [6, 1.1]] }],
+        "10": [{ "type": "move", "duration": 1,    "to": [[6.5, 3], [7.05, 3.1]] }]
       }
     }, {
       "guide": {
@@ -96,10 +96,10 @@
         "text": "<p><span class='team-1'>Jammer</span> starts pushing, but most importantly all the <span class='team-1'>blockers</span> hold the pack.</p><p>At this point everyone is still close enough to be a pack. If the pack moves now this maneuver won't be effective.</p>"
       },
       "players": {
-        "1":  { "duration": 1,    "steps": [[6.5, 1.25], [5, 1.5]] },
-        "7":  { "duration": 1,    "steps": [[6.25, 1.9], [4.85, 2.15]] },
-        "8":  { "duration": 1,    "steps": [[6, 1.1], [4.5, 1.45]] },
-        "11":  { "duration": 1,    "steps": [[7, -0.5], [4.5, -0.45]] }
+        "1":  [{ "type": "move", "duration": 1, "to": [[6.5, 1.25], [5, 1.5]] }],
+        "7":  [{ "type": "move", "duration": 1, "to": [[6.25, 1.9], [4.85, 2.15]] }],
+        "8":  [{ "type": "move", "duration": 1, "to": [[6, 1.1], [4.5, 1.45]] }],
+        "11": [{ "type": "move", "duration": 1, "to": [[7, -0.5], [4.5, -0.45]] }]
       }
     }, {
       "guide": {
@@ -107,10 +107,10 @@
         "text": "<p>Now all the <span class='team-1'>jammer</span> has to do is <strong>push, push, push!</strong.</p>"
       },
       "players": {
-        "1":  { "duration": 3,    "steps": [[5, 1.5], [3, 2.5], [1.3, 6.15]] },
-        "7":  { "duration": 3,    "steps": [[4.9, 2.1], [3, 3.2], [1.55, 6.7]] },
-        "8":  { "duration": 3,    "steps": [[4.5, 1.45], [2.475, 2.8], [1, 6.7]] },
-        "11":  { "duration": 3,    "steps": [[4.5, -0.45], [0.5, 1.9], [-1, 6.7]] }
+        "1":  [{ "type": "move", "duration": 3, "to": [[5, 1.5], [3, 2.5], [1.3, 6.15]] }],
+        "7":  [{ "type": "move", "duration": 3, "to": [[4.9, 2.1], [3, 3.2], [1.55, 6.7]] }],
+        "8":  [{ "type": "move", "duration": 3, "to": [[4.5, 1.45], [2.475, 2.8], [1, 6.7]] }],
+        "11": [{ "type": "move", "duration": 3, "to": [[4.5, -0.45], [0.5, 1.9], [-1, 6.7]] }]
       }
     }, {
       "guide": {
@@ -118,9 +118,9 @@
         "text": "<p><strong>\"NO PACK!\"</strong> &mdash; Referee</p><p>The referee now declares the pack to be back with everyone else, forcing the <span class='team-2'>blockers</span> holding the <span class='team-1'>jammer</span> to either return to the pack or risk a Failure to Reform penalty.</p>"
       },
       "players": {
-        "1":  { "duration": 2,    "steps": [[1.3, 6.15], [1.6, 8], [3, 10]] },
-        "7":  { "duration": 3,    "steps": [[1.55, 6.7], [2, 6.7], [2.1, 5], [4, 1.5], [6, 1.5]] },
-        "8":  { "duration": 3,    "steps": [[1, 6.7], [0.75, 6.7], [1, 5], [6.5, 1]] }
+        "1": [{ "type": "move", "duration": 2, "to": [[1.3, 6.15], [1.6, 8], [3, 10]] }],
+        "7": [{ "type": "move", "duration": 3, "to": [[1.55, 6.7], [2, 6.7], [2.1, 5], [4, 1.5], [6, 1.5]] }],
+        "8": [{ "type": "move", "duration": 3, "to": [[1, 6.7], [0.75, 6.7], [1, 5], [6.5, 1]] }]
       }
     }]
   }

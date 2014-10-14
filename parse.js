@@ -1,4 +1,4 @@
-// Array.find polyfil
+// Array.find polyfill
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {
     if (this == null) {
@@ -37,7 +37,7 @@ function parseCoordinate(json) {
 function parseMove(json) {
   return {
     duration: json.duration,
-    points: json.steps
+    points: json.to
   }
 }
 
@@ -47,14 +47,8 @@ function parsePlayer(json, movesJson, teams) {
     team: json.team
   }
 
-  var maxSteps = Object.keys(movesJson).map(function(id) {
-      return (movesJson[id].steps || []).length
-    }).reduce(function(a, b) {
-      return a + b
-    })
-
   player.moves = (movesJson || []).map(function(move) {
-    return move.players && move.players[player.id] ? parseMove(move.players[player.id]) : null
+    return move.players && move.players[player.id] ? parseMove(move.players[player.id][0]) : null
   })
 
   if (json.placement) {
