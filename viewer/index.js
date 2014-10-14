@@ -77,15 +77,17 @@ function createPlayerGraphics(svg, players) {
 function playerFromRelativeToScreenCoordinates(relative) {
   var absolute = relative
   absolute.placement = coordinateSystem.toScreen(relative.placement)
-  absolute.steps = relative.steps.map(function(step) {
-    if (!step) {
-      return null
-    }
+  absolute.steps = relative.steps.map(function(moves) {
+    return moves.map(function(step) {
+      if (!step) {
+        return null
+      }
 
-    return {
-      duration: step.duration,
-      points: step.points.map(coordinateSystem.toScreen),
-    }
+      return {
+        duration: step.duration,
+        points: step.points.map(coordinateSystem.toScreen),
+      }
+    })
   })
   return absolute
 }
@@ -102,7 +104,7 @@ function getTotalLength() {
 
 function step(svg, camera, players) {
   var playersInThisStep = players.filter(function(d) {
-    return !!d.steps[activeStep]
+    return (d.steps[activeStep] || []).length > 0
   })
 
   if (playersInThisStep.length == 0) {
@@ -120,7 +122,7 @@ function step(svg, camera, players) {
       .attr('class', 'path')
 
   pathsForThisStep.attr('d', function(d) {
-    var step = d.steps[activeStep]
+    var step = d.steps[activeStep][0]
     return line(step.points)
   })
   .style('stroke-dasharray', getTotalLength)
@@ -129,7 +131,7 @@ function step(svg, camera, players) {
   pathsForThisStep.exit().remove()
 
   var durationFn = function(d) {
-    var step = d.steps[activeStep]
+    var step = d.steps[activeStep][0]
     return step ? step.duration * 1000 : 0
   }
 

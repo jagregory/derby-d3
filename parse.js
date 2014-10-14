@@ -48,7 +48,7 @@ function parsePlayer(json, movesJson, teams) {
   }
 
   player.steps = (movesJson || []).map(function(move) {
-    return move.players && move.players[player.id] ? parseMove(move.players[player.id][0]) : null
+    return ((move.players || {})[player.id] || []).map(parseMove)
   })
 
   if (!json.placement) {
