@@ -80,7 +80,8 @@ describe('parsing play json', function() {
           },
           "players": {
             "1": [
-              { "type": "move", "to": [[10, 1.25], [7.55, 1.25]], "duration": 1 }
+              { "type": "move", "to": [[10, 1.25], [7.55, 1.25]], "duration": 1 },
+              { "type": "move", "to": [[7.55, 1.25], [6, 0]],     "duration": 0.5 }
             ],
             "2": [
               { "type": "move", "to": [[5.75, 1.25], [5.75, 1.75]], "duration": 0.5 }
@@ -271,10 +272,14 @@ describe('parsing play json', function() {
         expect(steps.length).toBe(3)
 
         var step1 = steps[0]
-        expect(step1.length).toBe(1)
+        expect(step1.length).toBe(2)
         expect(step1[0]).toEqual({
           duration: 1,
           points: [[10, 1.25], [7.55, 1.25]]
+        })
+        expect(step1[1]).toEqual({
+          duration: 0.5,
+          points: [[7.55, 1.25], [6, 0]]
         })
 
         var step2 = steps[1]
