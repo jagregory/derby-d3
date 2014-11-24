@@ -1,74 +1,65 @@
-var Geometry = require('./geometry')
+import { unionRect, growRect, scaleRect } from './geometry'
 
 function getScreenCoords(el) {
-  var cx = el.getAttribute('cx'),
-    cy = el.getAttribute('cy'),
-    ctm = el.getCTM(),
-    bbox = el.getBBox(),
+  let { width, height } = el.getBBox(),
     matrix = el.transform.baseVal.getItem(0).matrix
+    x = matrix.e - width / 2,
+    y = matrix.f - height / 2
 
-  return {
-    x: matrix.e - bbox.width / 2,
-    y: matrix.f - bbox.height / 2,
-    width: bbox.width,
-    height: bbox.height,
-  }
+  return { x, y, width, height }
 }
 
 function zoomTo(svg, zb, pos, scale) {
-  svg.attr("transform", "translate(" + pos + "), scale(" + scale + ")");
+  svg.attr('transform', `translate(${pos}), scale(${scale})`);
   zb.translate(pos)
   zb.scale(scale)
 }
 
-function minimalBoundingRect(query) {
-  return d3.selectAll(query)[0]
+let minimalBoundingRect = query =>
+  d3.selectAll(query)[0]
     .map(getScreenCoords)
-    .reduce(Geometry.unionRect)
-}
+    .reduce(unionRect)
 
-function focusOnActivity(target, zb, screen) {
-  var rect = minimalBoundingRect('.player')
-  zoomToRect(target, zb, Geometry.scaleRect(rect, 2), screen)
-}
+let focusOnActivity = (target, zb, screen) =>
+  zoomToRect(target, zb, scaleRect(minimalBoundingRect('.player'), 2), screen)
 
 function zoomToRect(target, zb, rect, screen) {
-  var targetHeight = rect.width / screen.aspectRatio
+  let targetHeight = rect.width / screen.aspectRatio
 
   if (rect.height < targetHeight) {
     // make sure the height fits the aspect ratio
-    var delta = targetHeight - rect.height
-    rect = Geometry.growRect(rect, 0, delta)
+    let delta = targetHeight - rect.height
+    rect = growRect(rect, 0, delta)
   } else {
     // make sure the width fits the aspect ratio
-    var targetWidth = rect.height * screen.aspectRatio
-    var delta = targetWidth - rect.width
-    rect = Geometry.growRect(rect, delta, 0)
+    let targetWidth = rect.height * screen.aspectRatio
+    let delta = targetWidth - rect.width
+    rect = growRect(rect, delta, 0)
   }
 
-  var scale = screen.width / rect.width
+  let scale = screen.width / rect.width
   zoomTo(target, zb, [-rect.x * scale, -rect.y * scale], scale)
 }
 
-module.exports = function(width, height) {
-  var shouldFocus = true
-  var screen = {
-    width: width,
-    height: height,
+export default function(width, height) {
+  let shouldFocus = true
+  let screen = {
+    width,
+    height,
     aspectRatio: width / height
   }
-  var target = d3.select('body svg g')
-  var zb = d3.behavior.zoom()
+  let target = d3.select('body svg g')
+  let zb = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .size([width, height])
-    .on("zoom", function() {
+    .on("zoom", () => {
       zoomTo(target, zb, d3.event.translate, d3.event.scale)
       shouldFocus = false
     })
-  var svg = d3.select('body svg').call(zb)
+  let svg = d3.select('body svg').call(zb)
 
   return {
-    shouldFocus: function(v) {
+    shouldFocus(v) {
       if (typeof v !== 'undefined') {
         shouldFocus = v
       }
@@ -76,7 +67,7 @@ module.exports = function(width, height) {
       return shouldFocus
     },
 
-    focusOnActivity: function() {
+    focusOnActivity() {
       focusOnActivity(target, zb, screen)
     }
   }

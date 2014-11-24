@@ -1,46 +1,33 @@
-function unionRect(a, b) {
-  var x1 = Math.min(a.x, b.x),
-    y1 = Math.min(a.y, b.y)
+export function unionRect(a, b) {
+  let x = Math.min(a.x, b.x),
+    y = Math.min(a.y, b.y),
+    width = Math.max(a.x + a.width, b.x + b.width) - x,
+    height = Math.max(a.y + a.height, b.y + b.height) - y
 
-  return {
-    x: x1,
-    y: y1,
-    width: Math.max(a.x + a.width, b.x + b.width) - x1,
-    height: Math.max(a.y + a.height, b.y + b.height) - y1,
-  }
+  return { x, y, width, height }
 }
 
-function growRect(rect, wd, hd) {
-  var newWidth = rect.width + wd,
-    newHeight = rect.height + hd,
-    widthDelta = newWidth - rect.width,
-    heightDelta = newHeight - rect.height
+export function growRect(rect, wd, hd) {
+  let width = rect.width + wd,
+    height = rect.height + hd,
+    widthDelta = width - rect.width,
+    heightDelta = height - rect.height,
+    x = rect.x - widthDelta / 2,
+    y = rect.y - heightDelta / 2
 
-  return {
-    x: rect.x - (widthDelta / 2),
-    y: rect.y - (heightDelta / 2),
-    width: newWidth,
-    height: newHeight,
-  }
+  return { x, y, width, height }
 }
 
-function scaleRect(rect, scaleX, scaleY) {
+export function scaleRect(rect, scaleX, scaleY) {
   scaleY = scaleY || scaleX
-  var newWidth = rect.width * scaleX,
-    newHeight = rect.height * scaleY,
-    widthDelta = newWidth - rect.width,
-    heightDelta = newHeight - rect.height
+  let width = rect.width * scaleX,
+    height = rect.height * scaleY,
+    widthDelta = width - rect.width,
+    heightDelta = height - rect.height,
+    x = rect.x - widthDelta / 2,
+    y = rect.y - heightDelta / 2
 
-  return {
-    x: rect.x - (widthDelta / 2),
-    y: rect.y - (heightDelta / 2),
-    width: newWidth,
-    height: newHeight,
-  }
+  return { x, y, width, height }
 }
 
-module.exports = {
-  unionRect: unionRect,
-  growRect: growRect,
-  scaleRect: scaleRect,
-}
+export default { unionRect, growRect, scaleRect }

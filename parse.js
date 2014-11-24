@@ -22,34 +22,17 @@ if (!Array.prototype.find) {
   };
 }
 
-function parseTeams(json) {
-  return (json.teams || []).map(function(team) {
-    return {
-      id: team.id
-    }
-  })
-}
-
-function parseCoordinate(json) {
-  return [json[0], json[1]]
-}
-
-function parseMove(json) {
-  return {
-    duration: json.duration,
-    points: json.to
-  }
-}
+let parseTeams = json => (json.teams || []).map(t => ({ id: t.id }))
+let parseCoordinate = json => [json[0], json[1]]
+let parseMove = json => ({ duration: json.duration, points: json.to })
 
 function parsePlayer(json, movesJson, teams) {
-  var player = {
+  let player = {
     id: json.id,
     team: json.team
   }
 
-  player.steps = (movesJson || []).map(function(move) {
-    return ((move.players || {})[player.id] || []).map(parseMove)
-  })
+  player.steps = (movesJson || []).map(m => ((m.players || {})[player.id] || []).map(parseMove))
 
   if (!json.placement) {
     throw 'Player ' + player.id + ' missing placement'
@@ -67,9 +50,7 @@ function parsePlayer(json, movesJson, teams) {
 function parsePlayers(json, teams) {
   var movesJson = json.play && json.play.moves ? json.play.moves : {}
 
-  return (json.players || []).map(function(player) {
-    return parsePlayer(player, movesJson, teams)
-  })
+  return (json.players || []).map(p => parsePlayer(p, movesJson, teams))
 }
 
 function parseGuides(json) {
@@ -77,27 +58,19 @@ function parseGuides(json) {
     return []
   }
 
-  var play = json.play
-  var guides = (play.moves || []).map(function(move) {
-    return move.guide ? move.guide : null
-  })
+  let play = json.play,
+    guides = (play.moves || []).map(m => m.guide ? m.guide : null)
 
   guides.splice(0, 0, play.guide ? play.guide : null)
 
   return guides
 }
 
-function Parse(json) {
-  var teams = parseTeams(json)
-  var players = parsePlayers(json, teams)
-  var guides = parseGuides(json)
+export default function Parse(json) {
+  let teams = parseTeams(json),
+    players = parsePlayers(json, teams),
+    guides = parseGuides(json),
+    title = (json.play || {}).title
 
-  return {
-    guides: guides,
-    players: players,
-    teams: teams,
-    title: (json.play || {}).title
-  }
+  return { guides, players, teams, title }
 }
-
-module.exports = Parse

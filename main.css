@@ -37,7 +37,8 @@ path {
 }
 
 path.path {
-  stroke-dasharray: 0;
+  /*stroke-dasharray: 0;*/
+  stroke: red;
 }
 
 .player {

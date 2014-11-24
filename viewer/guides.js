@@ -1,25 +1,22 @@
-module.exports = {
-  create: function(guides) {
-    var guideGraphics = d3.select('body').selectAll('.guide')
-      .data(guides)
-      .enter()
-        .insert('div', 'svg')
-        .attr('class', 'guide')
-        .style('display', 'none')
+let create = guides => {
+  let guideGraphics = d3.select('body').selectAll('.guide')
+    .data(guides)
+    .enter()
+      .insert('div', 'svg')
+      .attr('class', 'guide')
+      .style('display', 'none')
 
-    guideGraphics
-      .append('h1')
-      .text(function(d) { return d ? d.heading : '' })
+  guideGraphics
+    .append('h1')
+    .text(d => d ? d.heading : '')
 
-    guideGraphics
-      .append('div')
-      .html(function(d) { return d ? d.text : '' })
-  },
-
-  update: function(step) {
-    d3.selectAll('.guide')
-      .style('display', function(d, idx) {
-        return idx == step ? '' : 'none'
-      })
-  }
+  guideGraphics
+    .append('div')
+    .html(d => d ? d.text : '')
 }
+
+let update = step =>
+  d3.selectAll('.guide')
+    .style('display', (d, idx) => idx == step ? '' : 'none')
+
+export default { create, update }
