@@ -79,53 +79,53 @@ function getTotalLength() {
   return this.getTotalLength()
 }
 
-function animatePlayers(activeMoveIndex, players) {
-  let explodedActions = []
-  for (let d of players) {
-    let player = d[0]
-    let actions = d[1]
-    for (let i = 0; i < actions.length; i++) {
-      let id = `${activeMoveIndex}-${player.id}-${i}`,
-        action = actions[i]
-      explodedActions.push({ id, player, action })
-    }
+function createSvgElement(name, attrs) {
+  let el = document.createElementNS('http://www.w3.org/2000/svg', name)
+
+  for (let attr of Object.keys(attrs)) {
+    el.setAttributeNS(null, attr, attrs[attr])
   }
 
-  let pathsForThisStep = d3.select('svg').selectAll('.path')
-    .data(explodedActions, d => d.id)
-    .enter()
-      .append('path', '.player')
-      .attr('class', 'path')
-      .attr('d', d => line(d.action.to))
+  return el
+}
 
-  // for (let action of actions) {
-    // pathsForThisStep.attr('d', function(move) {
-    //   console.log(move)
-    //   return line(move.to)
-    // })
-  
-    // svg.selectAll('.player')
-    //   .data([player], d => d.id)
-    //   .transition()
-    //     .duration(m => m.duration * 1000)
-    //     .attrTween('transform', function(d, idx) {
-    //       var path = pathsForThisStep[0][idx]
-    //       var l = path.getTotalLength();
-    //       var prevTime = 0
-    //       return function(time) {
-    //         if (camera.shouldFocus()) {
-    //           camera.focusOnActivity()
-    //         }
-            
-    //         var prevPos = path.getPointAtLength(prevTime * l)
-    //         var pos = path.getPointAtLength(time * l);
-    //         var angle = Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
-    //         prevTime = time
+let angle = (pos, prevPos) => Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
 
-    //         return 'translate('+pos.x+','+pos.y+')rotate('+angle+')'
-    //       }
-    //     })
-  // }
+function animatePlayerAlongPath(player, action, path, done) {
+  let pointAtTime = t => path.getPointAtLength(t * path.getTotalLength())
+
+  d3.select(`#player-${player.id}`)
+    .transition()
+      .duration(action.duration * 1000)
+      .attrTween('transform', () => {
+        let prevPos = null
+        return (time) => {
+          // if (camera.shouldFocus()) {
+          //   camera.focusOnActivity()
+          // }
+          
+          let pos = pointAtTime(time)
+          prevPos = prevPos || pos
+
+          return `translate(${pos.x},${pos.y})rotate(${angle(pos, prevPos)})`
+        }
+      })
+      .each(done) 
+}
+
+function animatePlayer(player, actions) {
+  if (actions.length === 0) {
+    return
+  }
+
+  let action = actions[0]
+  let path = createSvgElement('path', {
+    class: 'path',
+    d: line(action.to)
+  })
+
+  animatePlayerAlongPath(player, action, path, () =>
+    animatePlayer(player, actions.slice(1)))
 }
 
 let activeMoveIndex = 0
@@ -134,83 +134,10 @@ function step(svg, camera, play, players) {
   let activePlayers = Object.keys(activeMove.players).
     map(id => players.find(p => p.id === id))
 
-  animatePlayers(activeMoveIndex, activePlayers.map(p => [p, activeMove.players[p.id]]))
+  for (let p of activePlayers) {
+    animatePlayer(p, activeMove.players[p.id])
+  }
   activeMoveIndex++
-
-  // var movesForThisStep = playersInThisStep.map(function(player) {
-  //   return player.steps[activeStep].map(function(move) {
-  //     move.player = player
-  //     return move
-  //   })
-  // }).reduce(function(a, b) {
-  //   return a.concat(b)
-  // })
-
-  // console.log('movesForThisStep', movesForThisStep.length)
-
-  // var pathsForThisStep = svg.selectAll('.path')
-  //   .data(movesForThisStep, function(d) { return d.player.id })
-
-  // pathsForThisStep
-  //   .enter()
-  //     .insert('path', '.player')
-  //     .attr('class', 'path')
-
-  // pathsForThisStep.attr('d', function(move) {
-  //   return line(move.points)
-  // })
-  // // .style('stroke-dasharray', getTotalLength)
-  // // .style('stroke-dashoffset', getTotalLength)
-  
-  // pathsForThisStep.exit().remove()
-
-  // var durationFn = function(move) {
-  //   return move.duration * 1000
-  // }
-
-  // pathsForThisStep.transition()
-  //   .duration(durationFn)
-  //   .styleTween('stroke-dashoffset', function() {
-  //     return d3.interpolateNumber(this.getTotalLength(), 0)
-  //   })
-
-  // d3.selectAll('button')
-  //   .attr('disabled', 'disabled')
-
-  // // TODO: Solve this next. Paths are now created using the invividual moves
-  // // but the player still need to move along them
-  // var n = 0; 
-  // svg.selectAll('.player')
-  //   .data(movesForThisStep, function(d) {
-  //     return d.id
-  //   })
-  //   .transition()
-  //     .duration(durationFn)
-  //     .attrTween('transform', function(d, idx) {
-  //       var path = pathsForThisStep[0][idx]
-  //       var l = path.getTotalLength();
-  //       var prevTime = 0
-  //       return function(time) {
-  //         if (camera.shouldFocus()) {
-  //           camera.focusOnActivity()
-  //         }
-          
-  //         var prevPos = path.getPointAtLength(prevTime * l)
-  //         var pos = path.getPointAtLength(time * l);
-  //         var angle = Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
-  //         prevTime = time
-
-  //         return 'translate('+pos.x+','+pos.y+')rotate('+angle+')'
-  //       }
-  //     })
-  //     .each(function() { ++n; }) 
-  //     .each('end', function(d) {
-  //       if (!--n) {
-  //         activeStep++
-  //         d3.selectAll('button')
-  //           .attr('disabled', null)
-  //       }
-  //     })
 }
 
 function reset(svg, camera, players) {
