@@ -118,14 +118,19 @@ function animatePlayer(player, actions) {
     return
   }
 
+  let next = () => animatePlayer(player, actions.slice(1))
   let action = actions[0]
-  let path = createSvgElement('path', {
-    class: 'path',
-    d: line(action.to)
-  })
 
-  animatePlayerAlongPath(player, action, path, () =>
-    animatePlayer(player, actions.slice(1)))
+  if (action.type === 'move') {
+    let path = createSvgElement('path', {
+      class: 'path',
+      d: line(action.to)
+    })
+
+    animatePlayerAlongPath(player, action, path, next)
+  } else if (action.type === 'halt') {
+    setTimeout(next, action.duration * 1000)
+  }
 }
 
 let activeMoveIndex = 0

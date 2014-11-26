@@ -1,0 +1,37 @@
+{
+  "teams": [{
+    "id": "1"
+  }],
+
+  "players": [{
+    "id": "1",
+    "team": "1",
+    "placement": [10, 1.25],
+    "properties": {
+      "position": "jammer"
+    }
+  }, {
+    "id": "2",
+    "team": "1",
+    "placement": [10, 2.25],
+    "properties": {
+      "position": "pivot"
+    }
+  }],
+
+  "play": {
+    "title": "Halting",
+    "moves": [{
+      "players": {
+        "1": [
+          { "type": "move", "duration": 0.5, "to": [[10, 1.25], [8, 1.25]] },
+          { "type": "halt", "duration": 0.5 },
+          { "type": "move", "duration": 0.5, "to": [[8, 1.25], [5.55, 1.25]] }
+        ],
+        "2": [
+          { "type": "move", "duration": 1, "to": [[10, 2.25], [5.55, 2.25]] }
+        ]
+      }
+    }]
+  }
+}
