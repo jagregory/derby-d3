@@ -110,7 +110,7 @@ function animatePlayerAlongPath(player, action, path, done) {
           return `translate(${pos.x},${pos.y})rotate(${angle(pos, prevPos)})`
         }
       })
-      .each(done) 
+      .each('end', done) 
 }
 
 function animatePlayer(player, actions) {
