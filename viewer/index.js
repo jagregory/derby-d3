@@ -89,12 +89,9 @@ function animatePlayer(player, actions) {
 let activeMoveIndex = 0
 function step(svg, camera, play, players) {
   let activeMove = play.moves[activeMoveIndex]
-  let activePlayers = Object.keys(activeMove.players).
-    map(id => players.find(p => p.id === id))
-
-  for (let p of activePlayers) {
-    animatePlayer(p, activeMove.players[p.id])
-  }
+  Object.keys(activeMove.players)
+    .map(id => players.find(p => p.id === id))
+    .forEach(p => animatePlayer(p, activeMove.players[p.id]))
   activeMoveIndex++
 }
 
