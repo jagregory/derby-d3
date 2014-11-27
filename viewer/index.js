@@ -70,28 +70,28 @@ function createPlayerGraphics(svg, playerData) {
 
 let activeStep = 0
 
-function animatePlayer(player, actions) {
+function animatePlayer(player, actions, ticker) {
   if (actions.length === 0) {
     return
   }
 
-  let next = () => animatePlayer(player, actions.slice(1))
+  let next = () => animatePlayer(player, actions.slice(1), ticker)
   let action = actions[0]
 
   let handler = ActionHandlers[action.type]
   if (handler) {
-    handler(player, action, next)
+    handler(player, action, next, ticker)
   } else {
     console.log('Skipping unrecognised action:', action.type)
   }
 }
 
 let activeMoveIndex = 0
-function step(svg, camera, play, players) {
+function step(svg, play, players, ticker) {
   let activeMove = play.moves[activeMoveIndex]
   Object.keys(activeMove.players)
     .map(id => players.find(p => p.id === id))
-    .forEach(p => animatePlayer(p, activeMove.players[p.id]))
+    .forEach(p => animatePlayer(p, activeMove.players[p.id], ticker))
   activeMoveIndex++
 }
 
@@ -104,8 +104,7 @@ function reset(svg, camera, players) {
     .data([]).exit().remove()
 
   Guides.update(0)
-  // shouldFocus = true
-  // camera.focusOnActivity()
+  camera.reset()
 }
 
 export default function() {
@@ -155,7 +154,7 @@ export default function() {
     },
 
     step() {
-      step(board, camera, play, players)
+      step(board, play, players, { tick: () => camera.update() })
     },
 
     reset() {

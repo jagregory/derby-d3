@@ -2,7 +2,7 @@ import { unionRect, growRect, scaleRect } from './geometry'
 
 function getScreenCoords(el) {
   let { width, height } = el.getBBox(),
-    matrix = el.transform.baseVal.getItem(0).matrix
+    matrix = el.transform.baseVal.getItem(0).matrix,
     x = matrix.e - width / 2,
     y = matrix.f - height / 2
 
@@ -69,6 +69,17 @@ export default function(width, height) {
 
     focusOnActivity() {
       focusOnActivity(target, zb, screen)
+    },
+
+    update() {
+      if (this.shouldFocus()) {
+        this.focusOnActivity()
+      }
+    },
+
+    reset() {
+      this.shouldFocus(true)
+      this.focusOnActivity()
     }
   }
 }

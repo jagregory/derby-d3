@@ -15,7 +15,7 @@ let line = d3.svg.line()
   .x(d => d[0])
   .y(d => d[1])
 
-export default function(player, action, done) {
+export default function(player, action, done, ticker) {
   let path = createSvgElement('path', {
     class: 'path',
     d: line(action.to)
@@ -28,9 +28,7 @@ export default function(player, action, done) {
       .attrTween('transform', () => {
         let prevPos = null
         return (time) => {
-          // if (camera.shouldFocus()) {
-          //   camera.focusOnActivity()
-          // }
+          ticker.tick(time)
           
           let pos = pointAtTime(time)
           prevPos = prevPos || pos
