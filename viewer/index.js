@@ -88,6 +88,7 @@ function animatePlayer(player, actions, ticker) {
 
 let activeMoveIndex = 0
 function step(svg, play, players, ticker) {
+  Guides.update(activeMoveIndex + 1)
   let activeMove = play.moves[activeMoveIndex]
   Object.keys(activeMove.players)
     .map(id => players.find(p => p.id === id))
@@ -99,9 +100,6 @@ function reset(svg, camera, players) {
   activeStep = 0
 
   createPlayerGraphics(svg, players)
-
-  svg.selectAll('.path')
-    .data([]).exit().remove()
 
   Guides.update(0)
   camera.reset()
@@ -133,7 +131,17 @@ export default function() {
   return {
     start(json) {
       play = assign({}, json.play)
+      let guides = []
+      
+      if (play.guide) {
+        guides.push(play.guide)
+      }
+
       for (let move of play.moves) {
+        if (move.guide) {
+          guides.push(move.guide)
+        }
+
         for (let id of Object.keys(move.players)) {
           for (let pm of move.players[id]) {
             if (pm.to) {
@@ -149,7 +157,7 @@ export default function() {
         })
       })
 
-      // Guides.create(guides)
+      Guides.create(guides)
       reset(board, camera, players)
     },
 
