@@ -1,14 +1,18 @@
 {
   "devDependencies": {
+    "array.prototype.find": "^1.0.0",
     "beefy": "^2.1.1",
     "browserify": "^5.12.0",
+    "chai": "^1.10.0",
     "es6ify": "^1.5.1",
-    "jasmine": "2.0.1",
-    "url": "^0.10.1",
+    "mocha": "^2.0.1",
+    "mocha-traceur": "^2.0.0",
     "object.assign": "^1.0.1",
-    "array.prototype.find": "^1.0.0"
+    "traceur": "0.0.78",
+    "url": "^0.10.1"
   },
   "scripts": {
-    "start": "beefy derby.js -- -t es6ify"
+    "start": "beefy derby.js -- -t es6ify",
+    "test": "mocha --compilers js:mocha-traceur spec/*"
   }
 }

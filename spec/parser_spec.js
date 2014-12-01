@@ -1,9 +1,12 @@
-var Parse = require('../parse')
+import Parse from '../parse'
+import chai from 'chai'
 
-describe('parsing play json', function() {
-  var json = null
+let expect = chai.expect
 
-  beforeEach(function() {
+describe('parsing play json', () => {
+  let json = null
+
+  beforeEach(() => {
     json = {
       "teams": [{
         "id": "1",
@@ -71,7 +74,8 @@ describe('parsing play json', function() {
       "play": {
         "guide": {
           "heading": "Before",
-          "text": "<h2 class=\"team-a\">Team a</h2><p>Do something</p><h2 class=\"team-b\">Team b</h2><p>Do something else</p>"
+          "text": `<h2 class="team-a">Team a</h2><p>Do something</p><h2
+                  "class="team-b">Team b</h2><p>Do something else</p>`
         },
         "moves": [{
           "guide": {
@@ -133,29 +137,30 @@ describe('parsing play json', function() {
     }
   })
 
-  it('extracts teams', function() {
-    var result = Parse(json)
+  it('extracts teams', () => {
+    let result = Parse(json)
 
-    expect(result.teams).toContain({
+    expect(result.teams).to.contain({
       id: '1'
     })
 
-    expect(result.teams).toContain({
+    expect(result.teams).to.contain({
       id: '2'
     })
 
-    expect(result.teams.length).toBe(2)
+    expect(result.teams.length).to.eql(2)
   })
 
-  describe('guides', function() {
-    var json = null
+  describe('guides', () => {
+    let json = null
 
-    beforeEach(function() {
+    beforeEach(() => {
       json = {
         "play": {
           "guide": {
             "heading": "Before",
-            "text": "<h2 class=\"team-a\">Team a</h2><p>Do something</p><h2 class=\"team-b\">Team b</h2><p>Do something else</p>"
+            "text": `<h2 class="team-a">Team a</h2><p>Do something</p><h2 
+                     class="team-b">Team b</h2><p>Do something else</p>`
           },
           "moves": [{
             "guide": {
@@ -172,8 +177,8 @@ describe('parsing play json', function() {
       }
     })
 
-    it('uses play guide as first guide and the move guides after', function() {
-      var result = Parse({
+    it('uses play guide as first guide and the move guides after', () => {
+      let result = Parse({
         "play": {
           "guide": {
             "heading": "First",
@@ -188,19 +193,19 @@ describe('parsing play json', function() {
         }
       })
 
-      expect(result.guides[0]).toEqual({
+      expect(result.guides[0]).to.eql({
         heading: "First",
         text: "Text"
       })
 
-      expect(result.guides[1]).toEqual({
+      expect(result.guides[1]).to.eql({
         heading: "Second",
         text: "Second Text"
       })
     })
 
-    it('uses null where there is no guide', function() {
-      var result = Parse({
+    it('uses null where there is no guide', () => {
+      let result = Parse({
         "play": {
           "moves": [{
             "guide": {
@@ -213,99 +218,98 @@ describe('parsing play json', function() {
         }
       })
 
-      expect(result.guides[0]).toEqual(null)
-      expect(result.guides[1]).toEqual({
+      expect(result.guides[0]).to.eql(null)
+      expect(result.guides[1]).to.eql({
         heading: "Second",
         text: "Second Text"
       })
-      expect(result.guides[2]).toEqual(null)
+      expect(result.guides[2]).to.eql(null)
     })
 
-    it('sets the title', function() {
-      var result = Parse({
+    it('sets the title', () => {
+      let result = Parse({
         "play": {
           "title": "blah"
         }
       })
 
-      expect(result.title).toEqual('blah')
+      expect(result.title).to.eql('blah')
     })
   })
 
-  describe('players', function() {
-    it('associates players with the right team', function() {
-      var result = Parse(json)
-      var team1 = result.teams[0]
-      var team2 = result.teams[1]
+  describe('players', () => {
+    it('associates players with the right team', () => {
+      let result = Parse(json),
+        team1 = result.teams[0],
+        team2 = result.teams[1]
 
-      expect(result.players[0].team).toBe(team1.id)
-      expect(result.players[5].team).toBe(team2.id)
+      expect(result.players[0].team).to.eql(team1.id)
+      expect(result.players[5].team).to.eql(team2.id)
     })
 
-    it('sets the player id', function() {
-      var result = Parse(json)
+    it('sets the player id', () => {
+      let result = Parse(json)
 
-      expect(result.players[0].id).toBe('1')
-      expect(result.players[1].id).toBe('2')
-      expect(result.players[2].id).toBe('3')
+      expect(result.players[0].id).to.eql('1')
+      expect(result.players[1].id).to.eql('2')
+      expect(result.players[2].id).to.eql('3')
     })
 
-    it('sets the player position', function() {
-      var result = Parse(json)
+    it('sets the player position', () => {
+      let result = Parse(json)
 
-      expect(result.players[0].position).toBe('jammer')
-      expect(result.players[1].position).toBe('pivot')
-      expect(result.players[2].position).toBe(undefined)
+      expect(result.players[0].position).to.eql('jammer')
+      expect(result.players[1].position).to.eql('pivot')
+      expect(result.players[2].position).to.eql(undefined)
     })
 
-    it('sets the player initial placement', function() {
-      var result = Parse(json)
+    it('sets the player initial placement', () => {
+      let result = Parse(json)
 
-      expect(result.players[0].placement).toEqual([10, 1.25])
+      expect(result.players[0].placement).to.eql([10, 1.25])
     })
 
-    describe('steps', function() {
-      it('embeds steps', function() {
-        var result = Parse(json)
+    describe('steps', () => {
+      it('embeds steps', () => {
+        let result = Parse(json)
 
-        var steps = result.players[0].steps
-        expect(steps.length).toBe(3)
+        let steps = result.players[0].steps
+        expect(steps.length).to.eql(3)
 
-        var step1 = steps[0]
-        expect(step1.length).toBe(2)
-        expect(step1[0]).toEqual({
+        let step1 = steps[0]
+        expect(step1.length).to.eql(2)
+        expect(step1[0]).to.eql({
           duration: 1,
           points: [[10, 1.25], [7.55, 1.25]]
         })
-        expect(step1[1]).toEqual({
+        expect(step1[1]).to.eql({
           duration: 0.5,
           points: [[7.55, 1.25], [6, 0]]
         })
 
         var step2 = steps[1]
-        expect(step2.length).toBe(1)
-        expect(step2[0]).toEqual({
+        expect(step2.length).to.eql(1)
+        expect(step2[0]).to.eql({
           duration: 1,
           points: [[7.55, 1.25], [7.75, 0.75], [7, 0.5], [4.5, 1.5]]
         })
       })
 
-      it('uses empty to indicate skipping a step', function() {
-        var result = Parse(json)
+      it('uses empty to indicate skipping a step', () => {
+        let result = Parse(json),
+          steps = result.players[1].steps
 
-        var steps = result.players[1].steps
-
-        expect(steps[1]).toEqual([])
+        expect(steps[1]).to.eql([])
       })
 
-      it('has no steps for an inactive player', function() {
-        var result = Parse(json)
+      it('has no steps for an inactive player', () => {
+        let result = Parse(json),
+          steps = result.players[4].steps
 
-        var steps = result.players[4].steps
-        expect(steps.length).toBe(3)
-        expect(steps[0]).toEqual([])
-        expect(steps[1]).toEqual([])
-        expect(steps[2]).toEqual([])
+        expect(steps.length).to.eql(3)
+        expect(steps[0]).to.eql([])
+        expect(steps[1]).to.eql([])
+        expect(steps[2]).to.eql([])
       })
     })
   })
