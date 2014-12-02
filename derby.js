@@ -2,7 +2,7 @@ import Parse from './parse'
 import Viewer from './viewer'
 import Url from 'url'
 
-let viewer = Viewer(),
+let viewer = null,
   url = Url.parse(window.location.href),
   playUrl = 'plays/example.json'
 
@@ -10,16 +10,15 @@ if (url.hash) {
   playUrl = url.hash.substring(1) + '.json'
 }
 
-$.get(playUrl, function(json) {
+$.get(playUrl, json => {
   let result = Parse(json)
 
   $('#title').text(result.title)
   $('title').text(result.title + ' - Derby demos')
-  
-  viewer.start(json)
+  viewer = Viewer(result)
 })
 
-$(function() {
+$(() => {
   $('#step').click(() => viewer.step())
   $('#reset').click(() => viewer.reset())
   $('#shouldFocus').change(() => viewer.shouldFocus(!viewer.shouldFocus()))

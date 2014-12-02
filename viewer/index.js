@@ -23,7 +23,7 @@ function createPlayerGraphics(svg, playerData) {
       .attr('class', d => `player team-${d.team}`)
       .attr('id', d => `player-${d.id}`)
   
-  players.attr('transform', d => `translate(${d.placement})`)
+  players.attr('transform', d => `translate(${coordinateSystem.toScreen(d.placement)})`)
 
   players.append('circle')
     .attr('r', 10)
@@ -68,8 +68,6 @@ function createPlayerGraphics(svg, playerData) {
   return players
 }
 
-let activeStep = 0
-
 function animatePlayer(player, actions, ticker) {
   if (actions.length === 0) {
     return
@@ -80,35 +78,32 @@ function animatePlayer(player, actions, ticker) {
 
   let handler = ActionHandlers[action.type]
   if (handler) {
-    handler(player, action, next, ticker)
+    handler(player, action, next, { coordinateSystem, ticker })
   } else {
     console.log('Skipping unrecognised action:', action.type)
   }
 }
 
 let activeMoveIndex = 0
-function step(svg, play, players, ticker) {
+function step(svg, play, ticker) {
   Guides.update(activeMoveIndex + 1)
   let activeMove = play.moves[activeMoveIndex]
   Object.keys(activeMove.players)
-    .map(id => players.find(p => p.id === id))
+    .map(id => play.players.find(p => p.id === id))
     .forEach(p => animatePlayer(p, activeMove.players[p.id], ticker))
   activeMoveIndex++
 }
 
-function reset(svg, camera, players) {
-  activeStep = 0
-
-  createPlayerGraphics(svg, players)
+function reset(svg, camera, play) {
+  activeMoveIndex = 0
+  
+  createPlayerGraphics(svg, play.players)
 
   Guides.update(0)
   camera.reset()
 }
 
-export default function() {
-  let play = [],
-    players = []
-
+export default function(play) {
   d3.select('svg').append('defs')
     .append('clipPath')
     .attr('id', 'playerClip')
@@ -128,45 +123,16 @@ export default function() {
     .attr('d', Shapes.track)
     .attr('transform', 'translate(120, 40), scale(2.5)')
 
+  Guides.create(play.guides)
+  reset(board, camera, play)
+
   return {
-    start(json) {
-      play = assign({}, json.play)
-      let guides = []
-      
-      if (play.guide) {
-        guides.push(play.guide)
-      }
-
-      for (let move of play.moves) {
-        if (move.guide) {
-          guides.push(move.guide)
-        }
-
-        for (let id of Object.keys(move.players)) {
-          for (let pm of move.players[id]) {
-            if (pm.to) {
-              pm.to = pm.to.map(coordinateSystem.toScreen)
-            }
-          }
-        }
-      }
-
-      players = json.players.map(function(player) {
-        return assign({}, player, {
-          placement: coordinateSystem.toScreen(player.placement)
-        })
-      })
-
-      Guides.create(guides)
-      reset(board, camera, players)
-    },
-
     step() {
-      step(board, play, players, { tick: () => camera.update() })
+      step(board, play, { tick: () => camera.update() })
     },
 
     reset() {
-      reset(board, camera, players)
+      reset(board, camera, play)
     },
 
     shouldFocus: camera.shouldFocus

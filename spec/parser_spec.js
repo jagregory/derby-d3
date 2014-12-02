@@ -151,6 +151,12 @@ describe('parsing play json', () => {
     expect(result.teams.length).to.eql(2)
   })
 
+  it('extracts moves', () => {
+    let result = Parse(json)
+
+    expect(result.moves.length).to.eql(3)
+  })
+
   describe('guides', () => {
     let json = null
 
@@ -267,50 +273,6 @@ describe('parsing play json', () => {
       let result = Parse(json)
 
       expect(result.players[0].placement).to.eql([10, 1.25])
-    })
-
-    describe('steps', () => {
-      it('embeds steps', () => {
-        let result = Parse(json)
-
-        let steps = result.players[0].steps
-        expect(steps.length).to.eql(3)
-
-        let step1 = steps[0]
-        expect(step1.length).to.eql(2)
-        expect(step1[0]).to.eql({
-          duration: 1,
-          points: [[10, 1.25], [7.55, 1.25]]
-        })
-        expect(step1[1]).to.eql({
-          duration: 0.5,
-          points: [[7.55, 1.25], [6, 0]]
-        })
-
-        var step2 = steps[1]
-        expect(step2.length).to.eql(1)
-        expect(step2[0]).to.eql({
-          duration: 1,
-          points: [[7.55, 1.25], [7.75, 0.75], [7, 0.5], [4.5, 1.5]]
-        })
-      })
-
-      it('uses empty to indicate skipping a step', () => {
-        let result = Parse(json),
-          steps = result.players[1].steps
-
-        expect(steps[1]).to.eql([])
-      })
-
-      it('has no steps for an inactive player', () => {
-        let result = Parse(json),
-          steps = result.players[4].steps
-
-        expect(steps.length).to.eql(3)
-        expect(steps[0]).to.eql([])
-        expect(steps[1]).to.eql([])
-        expect(steps[2]).to.eql([])
-      })
     })
   })
 })

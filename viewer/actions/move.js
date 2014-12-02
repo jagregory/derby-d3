@@ -9,13 +9,14 @@ function createSvgElement(name, attrs) {
 }
 
 let angle = (pos, prevPos) => Math.atan2(pos.y - prevPos.y, pos.x - prevPos.x) * 180 / Math.PI
-let line = d3.svg.line()
-  .tension(0.75)
-  .interpolate('cardinal')
-  .x(d => d[0])
-  .y(d => d[1])
 
-export default function(player, action, done, ticker) {
+export default function(player, action, done, context) {
+  let {coordinateSystem,ticker} = context
+  let line = d3.svg.line()
+    .tension(0.75)
+    .interpolate('cardinal')
+    .x(d => coordinateSystem.toScreen(d)[0])
+    .y(d => coordinateSystem.toScreen(d)[1])
   let path = createSvgElement('path', {
     class: 'path',
     d: line(action.to)
