@@ -114,14 +114,73 @@ export default function(play) {
     .attr('preserveAspectRatio', 'xMinYMin meet')
     .attr('viewBox', `0 0 ${width} ${height}`)
     .attr('class', 'svg-content-responsive')
-    .append('g');
+    .append('g')
+    .attr('transform', 'translate(120, 40), scale(2.5)')
 
   let camera = Camera(width, height, board)
 
+  // scale the G not the tracks?
   let trackOutside = board.append('path')
     .attr('class', 'track')
-    .attr('d', Shapes.track)
-    .attr('transform', 'translate(120, 40), scale(2.5)')
+    .attr('id', 'outside')
+    .attr('d', Shapes.trackOutside)
+
+  let trackInside = board.append('path')
+    .attr('class', 'track')
+    .attr('id', 'inside')
+    .attr('d', Shapes.trackInside)
+
+  let line = board.append('path').attr('id', 'line')
+
+let outerPoint = board.append('circle').attr('r', 3).attr('fill', 'red')
+let innerPoint = board.append('circle').attr('r', 3).attr('fill', 'red')
+
+let s = Snap('svg')
+
+// hack some stuff in for engagement zone
+function getIntersections() {
+  var ins = Snap.path.intersection(s.select('#inside'), s.select('#line'))
+  if (ins.length > 0) {
+    return ins[0]
+  }
+  return null
+}
+
+var length = Math.ceil(trackOutside[0][0].getTotalLength());
+var i = 0;
+
+setInterval(function() {
+    var p1 = trackOutside[0][0].getPointAtLength(i)
+    var p2 = trackOutside[0][0].getPointAtLength(i+5)
+    
+    var startX = p1.x,
+        startY = p1.y,
+        endX = p2.x,
+        endY = p2.y,
+        centrePointX = p1.x,
+        centrePointY = p1.y,
+        angle = Math.atan2(endY - startY, endX - startX),
+        dist = 75;
+
+    var vx = Math.sin(angle) + centrePointX,
+        vy = -Math.cos(angle) + centrePointY,
+        vx2= -Math.sin(angle) * dist + centrePointX,
+        vy2= Math.cos(angle) * dist + centrePointY
+    
+    line.attr('d', 'M'+vx+' '+vy+' L'+vx2+' '+vy2)
+    outerPoint.attr('cx', p1.x).attr('cy', p1.y)
+    
+    var intersections = getIntersections()
+    if (intersections) {
+      innerPoint.attr('cx', intersections.x).attr('cy', intersections.y)
+    }
+
+    if (i === length) {
+        i = 0;
+    } else {
+        i++;
+    }
+}, 10)
 
   Guides.create(play.guides)
   reset(board, camera, play)

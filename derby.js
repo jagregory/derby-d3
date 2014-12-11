@@ -4,7 +4,7 @@ import Url from 'url'
 
 let viewer = null,
   url = Url.parse(window.location.href),
-  playUrl = 'plays/example.json'
+  playUrl = 'plays/empty.json'
 
 if (url.hash) {
   playUrl = url.hash.substring(1) + '.json'
