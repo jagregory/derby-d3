@@ -1,12 +1,13 @@
 const width = 960,
   height = 500
 
+import ActionHandlers from './actions'
 import Camera from './camera'
+import CoordinateSystem from './coordinate-system'
+import EngagementZone from './engagement-zone'
 import Geometry from './geometry'
 import Guides from './guides'
 import Shapes from './shapes'
-import CoordinateSystem from './coordinate-system'
-import ActionHandlers from './actions'
 
 let coordinateSystem = CoordinateSystem(width, height),
   assign = Object.assign || require('object.assign')
@@ -197,7 +198,12 @@ var i = 0;
 
   return {
     step() {
-      step(board, play, { tick: () => camera.update() })
+      step(board, play, {
+        tick() {
+          camera.update()
+          EngagementZone.update()
+        }
+      })
     },
 
     reset() {

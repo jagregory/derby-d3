@@ -23,12 +23,7 @@ export default function(player, action, done, context) {
   })
   let pointAtTime = t => path.getPointAtLength(t * path.getTotalLength())
 
-  let ezline = d3.select('svg g').append('line').attr('stroke', 'red')
-  let centreLine = d3.select('#centreLine'),
-    x1 = new Number(centreLine.attr('x1')),
-    x2 = new Number(centreLine.attr('x2')),
-    y = new Number(centreLine.attr('y1'))
-
+  // TODO: should we update the player itself and just have the xy bind to something on the player?
   d3.select(`#player-${player.id}`)
     .transition()
       .duration(action.duration * 1000)
@@ -39,21 +34,6 @@ export default function(player, action, done, context) {
           
           let pos = pointAtTime(time)
           prevPos = prevPos || pos
-
-          let constrainedX = 0
-
-          if (pos.x > x1 && pos.x < x2) {
-            constrainedX = pos.x
-          } else if (pos.x < x1) {
-            constrainedX = x1
-          } else {
-            constrainedX = x2
-          }
-
-          ezline.attr('x1', pos.x)
-            .attr('y1', pos.y)
-            .attr('x2', constrainedX)
-            .attr('y2', y)
 
           return `translate(${pos.x},${pos.y})rotate(${angle(pos, prevPos)})`
         }
