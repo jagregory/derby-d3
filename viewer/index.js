@@ -115,25 +115,26 @@ export default function(play) {
     .attr('viewBox', `0 0 ${width} ${height}`)
     .attr('class', 'svg-content-responsive')
     .append('g')
-    .attr('transform', 'translate(120, 40), scale(2.5)')
 
   let camera = Camera(width, height, board)
 
+  let track = board.append('g')
+    .attr('transform', 'translate(120, 40), scale(2.5)')
+
   // scale the G not the tracks?
-  let trackOutside = board.append('path')
+  let trackOutside = track.append('path')
     .attr('class', 'track')
     .attr('id', 'outside')
     .attr('d', Shapes.trackOutside)
 
-  let trackInside = board.append('path')
+  let trackInside = track.append('path')
     .attr('class', 'track')
     .attr('id', 'inside')
     .attr('d', Shapes.trackInside)
 
-  let line = board.append('path').attr('id', 'line')
-
-let outerPoint = board.append('circle').attr('r', 3).attr('fill', 'red')
-let innerPoint = board.append('circle').attr('r', 3).attr('fill', 'red')
+  let line = track.append('path').attr('id', 'line')
+  let outerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
+  let innerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
 
 let s = Snap('svg')
 
