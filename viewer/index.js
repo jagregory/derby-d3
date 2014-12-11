@@ -119,6 +119,7 @@ export default function(play) {
   let camera = Camera(width, height, board)
 
   let track = board.append('g')
+    .attr('id', 'track')
     .attr('transform', 'translate(120, 40), scale(2.5)')
 
   // scale the G not the tracks?
@@ -131,6 +132,14 @@ export default function(play) {
     .attr('class', 'track')
     .attr('id', 'inside')
     .attr('d', Shapes.trackInside)
+
+  let centreLine = board.append('line')
+    .attr('id', 'centreLine')
+    .attr('stroke', 'gray')
+    .attr('x1', 300)
+    .attr('y1', 250)
+    .attr('x2', 600)
+    .attr('y2', 250)
 
   let line = track.append('path').attr('id', 'line')
   let outerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
@@ -163,25 +172,25 @@ function normalFromPointsOnPath(p1, p2, dist) {
 var length = Math.ceil(trackOutside[0][0].getTotalLength());
 var i = 0;
 
-setInterval(function() {
-  let p1 = trackOutside[0][0].getPointAtLength(i),
-    p2 = trackOutside[0][0].getPointAtLength(i+5),
-    normal = normalFromPointsOnPath(p1, p2, 75)
+// setInterval(function() {
+//   let p1 = trackOutside[0][0].getPointAtLength(i),
+//     p2 = trackOutside[0][0].getPointAtLength(i+5),
+//     normal = normalFromPointsOnPath(p1, p2, 75)
     
-  line.attr('d', 'M'+normal[0].x+' '+normal[0].y+' L'+normal[1].x+' '+normal[1].y)
-  outerPoint.attr('cx', p1.x).attr('cy', p1.y)
+//   line.attr('d', 'M'+normal[0].x+' '+normal[0].y+' L'+normal[1].x+' '+normal[1].y)
+//   outerPoint.attr('cx', p1.x).attr('cy', p1.y)
     
-  let intersections = getIntersections(s.select('#inside'), s.select('#line'))
-  if (intersections) {
-    innerPoint.attr('cx', intersections.x).attr('cy', intersections.y)
-  }
+//   let intersections = getIntersections(s.select('#inside'), s.select('#line'))
+//   if (intersections) {
+//     innerPoint.attr('cx', intersections.x).attr('cy', intersections.y)
+//   }
 
-  if (i === length) {
-    i = 0;
-  } else {
-    i++;
-  }
-}, 10)
+//   if (i === length) {
+//     i = 0;
+//   } else {
+//     i++;
+//   }
+// }, 10)
 
   Guides.create(play.guides)
   reset(board, camera, play)
