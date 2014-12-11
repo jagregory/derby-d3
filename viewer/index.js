@@ -136,51 +136,51 @@ export default function(play) {
   let outerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
   let innerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
 
-let s = Snap('svg')
-
 // hack some stuff in for engagement zone
-function getIntersections() {
-  var ins = Snap.path.intersection(s.select('#inside'), s.select('#line'))
-  if (ins.length > 0) {
-    return ins[0]
-  }
-  return null
+function getIntersections(path, line) {
+  let s = Snap('svg'),
+    ins = Snap.path.intersection(path, line)
+  return ins.length > 0 ? ins[0] : null
+}
+
+function normalFromPointsOnPath(p1, p2, dist) {
+  let startX = p1.x,
+    startY = p1.y,
+    endX = p2.x,
+    endY = p2.y,
+    centrePointX = p1.x,
+    centrePointY = p1.y,
+    angle = Math.atan2(endY - startY, endX - startX)
+
+  let vx = Math.sin(angle) + centrePointX,
+    vy = -Math.cos(angle) + centrePointY,
+    vx2 = -Math.sin(angle) * dist + centrePointX,
+    vy2 = Math.cos(angle) * dist + centrePointY
+
+  return [{ x: vx, y: vy }, { x: vx2, y: vy2 }]
 }
 
 var length = Math.ceil(trackOutside[0][0].getTotalLength());
 var i = 0;
 
 setInterval(function() {
-    var p1 = trackOutside[0][0].getPointAtLength(i)
-    var p2 = trackOutside[0][0].getPointAtLength(i+5)
+  let p1 = trackOutside[0][0].getPointAtLength(i),
+    p2 = trackOutside[0][0].getPointAtLength(i+5),
+    normal = normalFromPointsOnPath(p1, p2, 75)
     
-    var startX = p1.x,
-        startY = p1.y,
-        endX = p2.x,
-        endY = p2.y,
-        centrePointX = p1.x,
-        centrePointY = p1.y,
-        angle = Math.atan2(endY - startY, endX - startX),
-        dist = 75;
+  line.attr('d', 'M'+normal[0].x+' '+normal[0].y+' L'+normal[1].x+' '+normal[1].y)
+  outerPoint.attr('cx', p1.x).attr('cy', p1.y)
+    
+  let intersections = getIntersections(s.select('#inside'), s.select('#line'))
+  if (intersections) {
+    innerPoint.attr('cx', intersections.x).attr('cy', intersections.y)
+  }
 
-    var vx = Math.sin(angle) + centrePointX,
-        vy = -Math.cos(angle) + centrePointY,
-        vx2= -Math.sin(angle) * dist + centrePointX,
-        vy2= Math.cos(angle) * dist + centrePointY
-    
-    line.attr('d', 'M'+vx+' '+vy+' L'+vx2+' '+vy2)
-    outerPoint.attr('cx', p1.x).attr('cy', p1.y)
-    
-    var intersections = getIntersections()
-    if (intersections) {
-      innerPoint.attr('cx', intersections.x).attr('cy', intersections.y)
-    }
-
-    if (i === length) {
-        i = 0;
-    } else {
-        i++;
-    }
+  if (i === length) {
+    i = 0;
+  } else {
+    i++;
+  }
 }, 10)
 
   Guides.create(play.guides)
