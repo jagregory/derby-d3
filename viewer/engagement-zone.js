@@ -9,6 +9,16 @@ function constrainedX(x, left, right) {
 }
 
 let angleRadians = (p1, p2) => Math.atan2(p2[1] - p1[1], p2[0] - p1[0])
+let angleRadiansLine = l => angleRadians(l[0], l[1])
+let sortLines = (l1, l2) => angleRadiansLine(l1) - angleRadiansLine(l2)
+let sortLinesHorizontally = (y, l1, l2) => {
+  if (l1[0][1] < y) {
+    return l1[0][0] - l2[0][0]
+  } else {
+    console.log('inverted')
+    return l2[0][0] - l1[0][0]
+  }
+}
 
 function update() {
   let players = d3.selectAll('.player')[0]
@@ -19,10 +29,14 @@ function update() {
     y = parseInt(centreLine.attr('y1')),
     centre = left+(right-left)/2
 
-  let ezlines = players.map(pos => [[pos[0], pos[1]], [constrainedX(pos[0], left, right), y]])
+  let ezlines = players
+    .map(pos => [[pos[0], pos[1]], [constrainedX(pos[0], left, right), y]])
+    .sort((l1, l2) => sortLines(l1, l2) || sortLinesHorizontally(y, l1, l2))
+  let front = ezlines[0],
+    back = ezlines[ezlines.length-1]
 
-  ezlines = ezlines.sort((l1, l2) => angleRadians(l1[0], l1[1]) - angleRadians(l2[0], l2[1]) || l1[0][0] - l2[0][0])
-  
+  console.log('Front:', angleRadiansLine(front), 'Back:', angleRadiansLine(back))
+
   d3.select('svg g')
     .selectAll('line.ezline')
     .data(ezlines)
@@ -30,11 +44,11 @@ function update() {
     .attr('y1', d => d[0][1])
     .attr('x2', d => d[1][0])
     .attr('y2', d => d[1][1])
-    .attr('visibility', d => d === ezlines[0] || d === ezlines[ezlines.length-1] ? 'visible' : 'hidden')
+    .attr('visibility', d => d === front || d === back ? 'visible' : 'hidden')
     .attr('stroke', function(d) {
-      if (d === ezlines[0]) {
+      if (d === front) {
         return 'blue';
-      } else if (d === ezlines[ezlines.length-1]) {
+      } else if (d === back) {
         return 'green'
       }
 
