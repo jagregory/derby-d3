@@ -121,7 +121,6 @@ export default function(play) {
 
   let track = board.append('g')
     .attr('id', 'track')
-    .attr('transform', 'translate(120, 40), scale(2.5)')
 
   // scale the G not the tracks?
   let trackOutside = track.append('path')
