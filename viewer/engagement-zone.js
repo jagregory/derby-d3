@@ -67,10 +67,13 @@ function update() {
   let frontLine = Snap._.wrap(createSvgElement('line', {
     d: 'M' + front[0][0] + ' ' + front[0][1] + ' L' + front[1][0] + ' ' + front[1][1]
   }))
+  let backLine = Snap._.wrap(createSvgElement('line', {
+    d: 'M' + back[0][0] + ' ' + back[0][1] + ' L' + back[1][0] + ' ' + back[1][1]
+  }))
 
   d3.select('#track')
     .selectAll('line.ezline')
-    .data([front])
+    .data([front, back])
     .attr('x1', d => d[0][0])
     .attr('y1', d => d[0][1])
     .attr('x2', d => d[1][0])
@@ -88,13 +91,12 @@ function update() {
     .enter().append('line')
       .attr('class', 'ezline')
 
-  let point = d3.select('#track').append('circle').attr('r', 3).attr('fill', 'red').attr('id', 'cr')
-
-  let intersection = getIntersections(inside, frontLine)
-  if (intersection) {
+  let frontIntersection = getIntersections(inside, frontLine)
+  let backIntersection = getIntersections(inside, backLine)
+  if (frontIntersection) {
     d3.select('#track')
       .selectAll('#cr')
-      .data([intersection])
+      .data([frontIntersection, backIntersection])
       .attr('r', 3)
       .attr('fill', 'red')
       .attr('cx', d => d.x)
