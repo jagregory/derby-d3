@@ -30,6 +30,7 @@ function update() {
     .attr('y1', d => d[0][1])
     .attr('x2', d => d[1][0])
     .attr('y2', d => d[1][1])
+    .attr('visibility', d => d === ezlines[0] || d === ezlines[ezlines.length-1] ? 'visible' : 'hidden')
     .attr('stroke', function(d) {
       if (d === ezlines[0]) {
         return 'blue';
