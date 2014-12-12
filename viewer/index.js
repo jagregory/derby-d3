@@ -137,9 +137,9 @@ export default function(play) {
   let centreLine = board.append('line')
     .attr('id', 'centreLine')
     .attr('stroke', 'gray')
-    .attr('x1', 300)
+    .attr('x1', 330)
     .attr('y1', 250)
-    .attr('x2', 600)
+    .attr('x2', 570)
     .attr('y2', 250)
 
   let line = track.append('path').attr('id', 'line')
