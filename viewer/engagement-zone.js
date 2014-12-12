@@ -1,3 +1,13 @@
+function createSvgElement(name, attrs) {
+  let el = document.createElementNS('http://www.w3.org/2000/svg', name)
+
+  for (let attr of Object.keys(attrs)) {
+    el.setAttributeNS(null, attr, attrs[attr])
+  }
+
+  return el
+}
+
 function constrainedX(x, left, right) {
   if (x > left && x < right) {
     return x
@@ -6,6 +16,28 @@ function constrainedX(x, left, right) {
   } else {
     return right
   }
+}
+
+function getIntersections(path, line) {
+  let ins = Snap.path.intersection(Snap._.wrap(path), Snap._.wrap(line))
+  return ins.length > 0 ? ins[0] : null
+}
+
+function normalFromPointsOnPath(p1, p2, dist) {
+  let startX = p1.x,
+    startY = p1.y,
+    endX = p2.x,
+    endY = p2.y,
+    centrePointX = p1.x,
+    centrePointY = p1.y,
+    angle = Math.atan2(endY - startY, endX - startX)
+
+  let vx = Math.sin(angle) + centrePointX,
+    vy = -Math.cos(angle) + centrePointY,
+    vx2 = -Math.sin(angle) * dist + centrePointX,
+    vy2 = Math.cos(angle) * dist + centrePointY
+
+  return [[vx, vy], [vx2, vy2]]
 }
 
 let angleRadians = (p1, p2) => Math.atan2(p2[1] - p1[1], p2[0] - p1[0])
@@ -31,14 +63,19 @@ function update() {
   let front = ezlines[0],
     back = ezlines[ezlines.length-1]
 
-  d3.select('svg g')
+  let inside = Snap._.wrap(document.getElementById('inside'));
+  let frontLine = Snap._.wrap(createSvgElement('line', {
+    d: 'M' + front[0][0] + ' ' + front[0][1] + ' L' + front[1][0] + ' ' + front[1][1]
+  }))
+
+  d3.select('#track')
     .selectAll('line.ezline')
-    .data(ezlines)
+    .data([front])
     .attr('x1', d => d[0][0])
     .attr('y1', d => d[0][1])
     .attr('x2', d => d[1][0])
     .attr('y2', d => d[1][1])
-    .attr('visibility', d => d === front || d === back ? 'visible' : 'hidden')
+    .attr('stroke-width', 2)
     .attr('stroke', function(d) {
       if (d === front) {
         return 'blue';
@@ -50,6 +87,21 @@ function update() {
     })
     .enter().append('line')
       .attr('class', 'ezline')
+
+  let point = d3.select('#track').append('circle').attr('r', 3).attr('fill', 'red').attr('id', 'cr')
+
+  let intersection = getIntersections(inside, frontLine)
+  if (intersection) {
+    d3.select('#track')
+      .selectAll('#cr')
+      .data([intersection])
+      .attr('r', 3)
+      .attr('fill', 'red')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .enter().append('circle').attr('id', 'cr')
+    // frontLine.setAttribute('d', 'M' + front[0][0] + ' ' + front[0][1] + ' L' + intersection.x + ' ' + intersection.y)
+  }
 }
 
 export default { update }

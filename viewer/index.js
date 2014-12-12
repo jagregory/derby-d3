@@ -142,8 +142,6 @@ export default function(play) {
     .attr('y2', 250)
 
   let line = track.append('path').attr('id', 'line')
-  let outerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
-  let innerPoint = track.append('circle').attr('r', 3).attr('fill', 'red')
 
 // hack some stuff in for engagement zone
 function getIntersections(path, line) {
