@@ -65,7 +65,7 @@ function update() {
         y2 = cy,
         dx = x2 - x1,
         dy = y2 - y1
-      return [[x1 - dx, y1 - dy], [x2, y2]]
+      return [[x1 - dx * 2, y1 - dy * 2], [x2, y2]]
     })
     .sort((l1, l2) => sortByAngle(l1, l2) || sortByX(cy, l1, l2))
   let front = ezlines[0],
@@ -110,8 +110,8 @@ function update() {
       .data([frontInsideIntersection, frontOutsideIntersection, backInsideIntersection, backOutsideIntersection])
       .attr('r', 3)
       .attr('fill', 'red')
-      .attr('cx', d => d ? d.x : 0) // TODO: Handle out-of-bounds checks, extend the line outwards a bit
-      .attr('cy', d => d ? d.y : 0)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
       .enter().append('circle').attr('id', 'cr')
     // frontLine.setAttribute('d', 'M' + front[0][0] + ' ' + front[0][1] + ' L' + intersection.x + ' ' + intersection.y)
   }
